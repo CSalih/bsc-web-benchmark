@@ -137,6 +137,10 @@ importers:
       web-vitals:
         specifier: 3.5.2
         version: 3.5.2
+    devDependencies:
+      vite:
+        specifier: 5.2.10
+        version: 5.2.10(@types/node@20.12.7)
 
 packages:
 

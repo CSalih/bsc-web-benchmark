@@ -2,7 +2,13 @@
   "name": "web-vital",
   "version": "0.1.0",
   "main": "src/index.js",
+  "scripts": {
+    "build": "vite build"
+  },
   "dependencies": {
     "web-vitals": "3.5.2"
+  },
+  "devDependencies": {
+    "vite": "5.2.10"
   }
 }
