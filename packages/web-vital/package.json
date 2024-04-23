@@ -2,9 +2,6 @@
   "name": "web-vital",
   "version": "0.1.0",
   "main": "src/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "dependencies": {
     "web-vitals": "3.5.2"
   }
