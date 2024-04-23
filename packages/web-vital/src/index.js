@@ -1,10 +1,9 @@
-import { onCLS, onFID, onLCP, onINP, onFCP, onTTFB } from 'https://unpkg.com/web-vitals@3.5.2/dist/web-vitals.js?module';
-
+import { onCLS, onFID, onLCP, onINP, onFCP, onTTFB } from 'web-vitals';
 
 function sendToAnalyticsServer(metric) {
     const body = JSON.stringify({
-        type: "web-vitals-v1",
-        project: "@morandell/sales-representative",
+        type: "web-vitals/v1",
+        project: "@bsc-web-benchmark/web-vital",
         timestamp: new Date().toISOString(),
         href: location ? location.href : null,
         metadata: {
