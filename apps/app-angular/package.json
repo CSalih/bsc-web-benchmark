@@ -1,6 +1,8 @@
 {
   "name": "app-angular",
   "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "ng": "ng",
     "dev": "ng serve --watch --configuration development",

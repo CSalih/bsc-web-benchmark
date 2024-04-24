@@ -1,7 +1,7 @@
 {
   "name": "bsc-web-benchmark",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
   "workspaces": [
     "apps/*",
     "packages/*"
