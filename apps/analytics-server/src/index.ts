@@ -8,13 +8,7 @@ const port = process.env.PORT || 8000;
 
 app.use(express.json());
 app.use(express.text());
-
-
-app.get("/web-vital.js", (_: Request, res: Response) => {
-
-
-  res.status(204).end();
-});
+app.use(express.static('public'));
 
 app.post("/api/v1/event", (req: Request, res: Response) => {
   if (!req.body) {
