@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
+  "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "build": "vite build"
+    "build": "vite build && cp -R dist ../../apps/analytics-server/public/"
   },
   "dependencies": {
     "web-vitals": "3.5.2"

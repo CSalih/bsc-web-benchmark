@@ -1,9 +1,13 @@
 import { onCLS, onFID, onLCP, onINP, onFCP, onTTFB } from 'web-vitals';
 
+
+const project = document.currentScript.getAttribute('data-project') ?? "unknown";
+const baseUrl = document.currentScript.getAttribute('data-url');
+
 function sendToAnalyticsServer(metric) {
     const body = JSON.stringify({
         type: "web-vitals/v1",
-        project: "@bsc-web-benchmark/web-vital",
+        project,
         timestamp: new Date().toISOString(),
         href: location ? location.href : null,
         metadata: {
@@ -23,11 +27,10 @@ function sendToAnalyticsServer(metric) {
         },
         data: metric,
     });
-    const url = "http://localhost:3000/api/event";
     if (navigator.sendBeacon) {
-        navigator.sendBeacon(url, body);
+        navigator.sendBeacon(baseUrl, body);
     } else {
-        fetch(url, {
+        fetch(baseUrl, {
             body,
             method: "POST",
             keepalive: true,
