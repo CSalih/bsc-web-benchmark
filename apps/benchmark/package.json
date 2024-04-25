@@ -1,0 +1,13 @@
+{
+  "name": "benchmark",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.43.1",
+    "@types/node": "20.12.7"
+  }
+}
