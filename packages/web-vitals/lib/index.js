@@ -1,8 +1,8 @@
 import { onCLS, onFID, onLCP, onINP, onFCP, onTTFB } from 'web-vitals';
 
-
-const project = document.currentScript.getAttribute('data-project') ?? "unknown";
-const baseUrl = document.currentScript.getAttribute('data-url');
+const url = new URL(import.meta.url);
+const project = url.searchParams.get("project") ?? "unknown";
+const baseUrl = `${url.origin}/api/v1/event`;
 
 function sendToAnalyticsServer(metric) {
     const body = JSON.stringify({
