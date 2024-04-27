@@ -11,6 +11,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "pnpm --stream --parallel --filter \"...{apps/**}\" build"
+    "build": "pnpm --stream --parallel --filter \"...{apps/**}\" build",
+    "bech:build-size": "node scripts/measure-build-size.js"
   }
 }

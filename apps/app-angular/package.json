@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "ng": "ng",
-    "dev": "ng serve --watch --configuration development",
+    "dev": "ng serve --watch --configuration development --port 3000",
     "build": "ng build"
   },
   "dependencies": {

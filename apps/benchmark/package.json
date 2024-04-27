@@ -4,7 +4,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "playwright test --ui"
+    "dev": "playwright test --ui --ui-port 8001"
   },
   "devDependencies": {
     "@playwright/test": "^1.43.1",

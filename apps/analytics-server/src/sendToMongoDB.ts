@@ -10,7 +10,7 @@ const mongodbAPIAdapter = (metric: string) => {
   return {
     dataSource: "web-vital-analytics",
     database: "web-vital-analytics",
-    collection: "web-vitals",
+    collection: "bsc-web-benchmark",
     document: JSON.parse(metric),
   };
 };

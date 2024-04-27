@@ -1,7 +1,12 @@
 import {test, expect, type Page} from '@playwright/test';
 
 const app = {
-  reactUrl: "http://localhost:5173",
+  baseUrl: {
+    angular: "http://localhost:3000",
+    leptos: "http://localhost:3001",
+    react: "http://localhost:3002",
+    vue: "http://localhost:3002",
+  },
 }
 
 test.describe('chromium only', () => {
