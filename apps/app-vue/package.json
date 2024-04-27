@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3003" ,
     "build": "vue-tsc --build --force && vite build"
   },
   "dependencies": {
