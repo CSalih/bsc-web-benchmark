@@ -2,6 +2,10 @@
   "name": "bsc-web-benchmark",
   "version": "0.1.0",
   "license": "UNLICENSED",
+  "engines": {
+    "node": "^18",
+    "pnpm": ">=9"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
