@@ -5,6 +5,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "trunk serve --port 3001",
-    "build": "trunk build"
+    "build": "trunk build --release",
+    "build:docker": "cp ../../Cargo.lock . && docker build -t bsc/app-leptos:latest ."
   }
 }

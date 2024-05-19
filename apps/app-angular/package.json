@@ -6,7 +6,8 @@
   "scripts": {
     "ng": "ng",
     "dev": "ng serve --watch --configuration development --port 3000",
-    "build": "ng build"
+    "build": "ng build",
+    "build:docker": "docker build -t bsc/app-angular:latest ."
   },
   "dependencies": {
     "@angular/animations": "^17.3.0",
