@@ -9,6 +9,35 @@ const app = {
   },
 }
 
+const baseUrl = (path: string)  => `http://localhost:3000${path}`
+
+test.describe('web vitals', () => {
+
+  test('warm up phase', async ({page}) => {
+    const n = 10;
+
+    // Ignore analytics when warming up
+    await page.route('http://localhost:8000/api/v1/event', (route) => {
+      route.fulfill({ status: 204 });
+    });
+
+    for (let i = 0; i < n; i++) {
+      await page.goto(baseUrl("/"))
+      await page.getByRole('heading', {name: 'Hello World'}).click()
+    }
+  })
+
+  test('test phase', async ({page}) => {
+    const n = 100;
+
+    for (let i = 0; i < n; i++) {
+      await page.goto(baseUrl("/"))
+      await page.getByRole('heading', {name: 'Hello World'}).click()
+    }
+  })
+})
+
+
 test.describe('chromium only', () => {
   test.skip(({ browserName }) => browserName !== 'chromium', 'Chromium only!');
 
