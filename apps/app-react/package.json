@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 3002",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "build:docker": "docker build -t bsc/app-react:latest ."
   },
   "dependencies": {
     "react": "18.2.0",
