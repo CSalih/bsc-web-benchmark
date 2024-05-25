@@ -1,18 +1,26 @@
-FROM node:18 as build
+FROM node:18 AS build
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
 WORKDIR /app
 
-COPY package.json .
-RUN yarn install
+RUN corepack enable
 
-COPY . .
-RUN yarn build
+COPY package.json .
+COPY pnpm-lock.yaml .
+COPY pnpm-workspace.yaml .
+COPY apps/app-angular/package.json apps/app-angular/package.json
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+COPY apps/app-angular apps/app-angular
+RUN pnpm run build
 
 FROM nginx:1.26.0
-COPY --from=build /app/dist/browser /usr/share/nginx/html
+COPY --from=build /app/apps/app-angular/dist/browser /usr/share/nginx/html
 
 EXPOSE 80
 
 STOPSIGNAL SIGTERM
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
