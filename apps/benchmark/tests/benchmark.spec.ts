@@ -22,7 +22,10 @@ test.describe('web vitals', () => {
     });
 
     for (let i = 0; i < n; i++) {
+      // open page
       await page.goto(baseUrl("/"))
+
+      // click on an element to get Web Vitals like INP
       await page.getByRole('heading', {name: 'Hello World'}).click()
     }
   })
