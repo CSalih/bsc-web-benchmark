@@ -9,9 +9,9 @@ const app = {
   },
 }
 
-const baseUrl = (path: string)  => `http://localhost:3000${path}`
+const baseUrl = (path: string)  => `${app.baseUrl.angular}${path}`
 
-test.describe('web vitals', () => {
+test.describe('initial rendering phase', () => {
 
   test('warm up phase', async ({page}) => {
     const n = 10;
@@ -24,6 +24,9 @@ test.describe('web vitals', () => {
     for (let i = 0; i < n; i++) {
       // open page
       await page.goto(baseUrl("/"))
+
+      // TODO: Validate elements are available in the DOM
+      // await page.waitForSelector('h1')
 
       // click on an element to get Web Vitals like INP
       await page.getByRole('heading', {name: 'Hello World'}).click()
@@ -40,8 +43,64 @@ test.describe('web vitals', () => {
   })
 })
 
+test.describe('responsiveness', () => {
 
-test.describe('chromium only', () => {
+  test('warm up phase', async ({page}) => {
+    const n = 10;
+
+    // Ignore analytics when warming up
+    await page.route('http://localhost:8000/api/v1/event', (route) => {
+      route.fulfill({ status: 204 });
+    });
+
+    for (let i = 0; i < n; i++) {
+      // open page
+      await page.goto(baseUrl("/"), {
+        timeout: 1000, // 1 second
+        waitUntil: 'networkidle'
+      })
+
+      // TODO: Validate elements are available in the DOM
+
+      // Create 1000 rows
+      await page.locator('#run').click();
+
+      // wait for table to load
+      await page
+        .locator('.table > tbody:nth-child(1) > tr:nth-child(1000) > td:nth-child(1)')
+        .waitFor({
+          state: 'attached',
+          timeout: 1000
+        });
+    }
+  })
+
+  test('test phase', async ({page}) => {
+    // Enforce garbage collection
+    await page.evaluate("window.gc({type:'major',execution:'sync',flavor:'last-resort'})");
+
+    const client = await page.context().newCDPSession(page);
+    // Emulate slow CPU
+    await client.send("Emulation.setCPUThrottlingRate", {
+      rate: 3
+    });
+
+    // await browser.startTracing(page, {
+    //   path: fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions),
+    //   screenshots: false,
+    //   categories: categories,
+    // });
+
+    // RUN BENCHMARK
+
+    // await wait(40);
+    // await browser.stopTracing();
+
+  })
+})
+
+
+test.describe('experimental: chromium only', () => {
   test.skip(({ browserName }) => browserName !== 'chromium', 'Chromium only!');
 
   test('Get performance metrics', async ({page}) => {
