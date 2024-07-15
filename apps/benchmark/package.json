@@ -4,9 +4,12 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "playwright test --ui --ui-port 8001"
+    "dev": "playwright test --ui --ui-port 8001",
+    "format": "prettier --write \"{tests,utils}/**/*.{js,ts,json}\""
   },
+  "prettier": "@bsc-web-benchmark/prettier-config",
   "devDependencies": {
+    "@bsc-web-benchmark/prettier-config": "workspace:*",
     "@playwright/test": "^1.43.1",
     "@types/node": "20.12.7"
   }

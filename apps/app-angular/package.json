@@ -7,8 +7,10 @@
     "ng": "ng",
     "dev": "ng serve --watch --configuration development --port 3000",
     "build": "ng build",
-    "build:docker": "docker build -t bsc/app-angular:latest ."
+    "build:docker": "docker build -t bsc/app-angular:latest .",
+    "format": "prettier --write \"src/**/*.ts\""
   },
+  "prettier": "@bsc-web-benchmark/prettier-config",
   "dependencies": {
     "@angular/common": "^18.0.0",
     "@angular/compiler": "^18.0.0",
@@ -19,6 +21,7 @@
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
+    "@bsc-web-benchmark/prettier-config": "workspace:*",
     "@angular-devkit/build-angular": "^18.0.1",
     "@angular/cli": "^18.0.1",
     "@angular/compiler-cli": "^18.0.0",

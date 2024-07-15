@@ -1,12 +1,10 @@
-
-
 export const afterFrame = () => {
   // Source: https://github.com/andrewiggins/afterframe
   let callbacks = [];
   let channel = new MessageChannel();
-  let postMessage = (function() {
+  let postMessage = function () {
     this.postMessage(undefined);
-  }).bind(channel.port2);
+  }.bind(channel.port2);
   channel.port1.onmessage = () => {
     let toFlush = callbacks;
     callbacks = [];
@@ -17,9 +15,9 @@ export const afterFrame = () => {
   };
   channel = null;
   // @ts-ignore: We register the function in the window object
-  window.afterFrame = function(callback) {
+  window.afterFrame = function (callback) {
     if (callbacks.push(callback) === 1) {
       requestAnimationFrame(postMessage);
     }
-  }
+  };
 };

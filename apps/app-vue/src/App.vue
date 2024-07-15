@@ -1,89 +1,88 @@
 <script setup>
-import { ref, shallowRef } from 'vue'
-import { buildData } from './data'
+import { ref, shallowRef } from "vue";
+import { buildData } from "./data";
 
-const selected = ref()
-const rows = shallowRef([])
+const selected = ref();
+const rows = shallowRef([]);
 
 function setRows(update = rows.value.slice()) {
-  rows.value = update
+  rows.value = update;
 }
 
 function add() {
-  rows.value = rows.value.concat(buildData(1000))
+  rows.value = rows.value.concat(buildData(1000));
 }
 
 function remove(id) {
   rows.value.splice(
-      rows.value.findIndex((d) => d.id === id),
-      1
-  )
-  setRows()
+    rows.value.findIndex((d) => d.id === id),
+    1,
+  );
+  setRows();
 }
 
 function select(id) {
-  selected.value = id
+  selected.value = id;
 }
 
 function run() {
   if (window.afterFrame) {
     performance.mark("btn:run_start");
-    document.getElementById("run").click()
+    document.getElementById("run").click();
     window.afterFrame(() => {
       performance.mark("btn:run_end");
-    })
+    });
   }
 
-  setRows(buildData())
-  selected.value = undefined
+  setRows(buildData());
+  selected.value = undefined;
 }
 
 function update() {
-  const _rows = rows.value
+  const _rows = rows.value;
   for (let i = 0; i < _rows.length; i += 10) {
-    _rows[i].label += ' !!!'
+    _rows[i].label += " !!!";
   }
-  setRows()
+  setRows();
 }
 
 function runLots() {
   if (window.afterFrame) {
     performance.mark("btn:run_start");
-    document.getElementById("run").click()
+    document.getElementById("run").click();
     window.afterFrame(() => {
       performance.mark("btn:run_end");
-    })
+    });
   }
 
-  setRows(buildData(10000))
-  selected.value = undefined
+  setRows(buildData(10000));
+  selected.value = undefined;
 }
 
 function clear() {
-  setRows([])
-  selected.value = undefined
+  setRows([]);
+  selected.value = undefined;
 }
 
 function swapRows() {
-  const _rows = rows.value
+  const _rows = rows.value;
   if (_rows.length > 998) {
-    const d1 = _rows[1]
-    const d998 = _rows[998]
-    _rows[1] = d998
-    _rows[998] = d1
-    setRows()
+    const d1 = _rows[1];
+    const d998 = _rows[998];
+    _rows[1] = d998;
+    _rows[998] = d1;
+    setRows();
   }
 }
 
-
 // TODO: Evaluation purpose only!
-if (typeof __pw_recorderState === 'undefined') {
+if (typeof __pw_recorderState === "undefined") {
   // Source: https://github.com/andrewiggins/afterframe
   let callbacks = [];
   let channel = new MessageChannel();
-  let postMessage = (function() {
+  let postMessage = function () {
     this.postMessage(undefined);
-  }).bind(channel.port2);
+  }.bind(channel.port2);
   channel.port1.onmessage = () => {
     let toFlush = callbacks;
     callbacks = [];
@@ -94,25 +93,27 @@ if (typeof __pw_recorderState === 'undefined') {
   };
   channel = null;
   // @ts-ignore
-  window.afterFrame = function(callback) {
+  window.afterFrame = function (callback) {
     if (callbacks.push(callback) === 1) {
       requestAnimationFrame(postMessage);
     }
   };
 
-
   // Observe performance metrics
   const observer = new PerformanceObserver((list) => {
     list.getEntries().forEach((entry) => {
       if (entry.name === "btn:run_end") {
-        const measure = performance.measure("btn:run_duration", "btn:run_start", "btn:run_end");
+        const measure = performance.measure(
+          "btn:run_duration",
+          "btn:run_start",
+          "btn:run_end",
+        );
         console.log("Run time: ", measure.duration);
       }
     });
   });
   observer.observe({ entryTypes: ["mark"] });
 }
-
 </script>
 
 <template>
@@ -126,60 +127,60 @@ if (typeof __pw_recorderState === 'undefined') {
           <div class="row">
             <div class="col-sm-6 smallpad">
               <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="run"
-                  @click="run"
+                type="button"
+                class="btn btn-primary btn-block"
+                id="run"
+                @click="run"
               >
                 Create 1,000 rows
               </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="runlots"
-                  @click="runLots"
+                type="button"
+                class="btn btn-primary btn-block"
+                id="runlots"
+                @click="runLots"
               >
                 Create 10,000 rows
               </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="add"
-                  @click="add"
+                type="button"
+                class="btn btn-primary btn-block"
+                id="add"
+                @click="add"
               >
                 Append 1,000 rows
               </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="update"
-                  @click="update"
+                type="button"
+                class="btn btn-primary btn-block"
+                id="update"
+                @click="update"
               >
                 Update every 10th row
               </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="clear"
-                  @click="clear"
+                type="button"
+                class="btn btn-primary btn-block"
+                id="clear"
+                @click="clear"
               >
                 Clear
               </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="swaprows"
-                  @click="swapRows"
+                type="button"
+                class="btn btn-primary btn-block"
+                id="swaprows"
+                @click="swapRows"
               >
                 Swap Rows
               </button>
@@ -190,29 +191,29 @@ if (typeof __pw_recorderState === 'undefined') {
     </div>
     <table class="table table-hover table-striped test-data">
       <tbody>
-      <tr
+        <tr
           v-for="{ id, label } of rows"
           :key="id"
           :class="{ danger: id === selected }"
           :data-label="label"
           v-memo="[label, id === selected]"
-      >
-        <td class="col-md-1">{{ id }}</td>
-        <td class="col-md-4">
-          <a @click="select(id)">{{ label }}</a>
-        </td>
-        <td class="col-md-1">
-          <a @click="remove(id)">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-          </a>
-        </td>
-        <td class="col-md-6"></td>
-      </tr>
+        >
+          <td class="col-md-1">{{ id }}</td>
+          <td class="col-md-4">
+            <a @click="select(id)">{{ label }}</a>
+          </td>
+          <td class="col-md-1">
+            <a @click="remove(id)">
+              <span
+                class="glyphicon glyphicon-remove"
+                aria-hidden="true"
+              ></span>
+            </a>
+          </td>
+          <td class="col-md-6"></td>
+        </tr>
       </tbody>
     </table>
-    <span
-        class="preloadicon glyphicon glyphicon-remove"
-        aria-hidden="true"
-    />
+    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
   </div>
 </template>

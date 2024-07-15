@@ -1,0 +1,10 @@
+{
+  "name": "@bsc-web-benchmark/prettier-config",
+  "license": "MIT",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "prettier": "^3.3.3"
+  }
+}

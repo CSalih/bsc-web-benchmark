@@ -6,12 +6,15 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "format": "prettier --write \"lib/**/*.{js,ts}\""
   },
+  "prettier": "@bsc-web-benchmark/prettier-config",
   "dependencies": {
     "web-vitals": "3.5.2"
   },
   "devDependencies": {
+    "@bsc-web-benchmark/prettier-config": "workspace:*",
     "vite": "5.2.10"
   }
 }

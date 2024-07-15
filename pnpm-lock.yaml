@@ -20,6 +20,9 @@ importers:
         specifier: 4.19.2
         version: 4.19.2
     devDependencies:
+      '@bsc-web-benchmark/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@types/cors':
         specifier: 2.8.17
         version: 2.8.17
@@ -75,6 +78,9 @@ importers:
       '@angular/compiler-cli':
         specifier: ^18.0.0
         version: 18.0.0(@angular/compiler@18.0.0(@angular/core@18.0.0(rxjs@7.8.1)(zone.js@0.14.4)))(typescript@5.4.5)
+      '@bsc-web-benchmark/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       typescript:
         specifier: ~5.4.5
         version: 5.4.5
@@ -90,6 +96,9 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
+      '@bsc-web-benchmark/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
@@ -112,6 +121,9 @@ importers:
         specifier: ^3.4.27
         version: 3.4.27(typescript@5.4.5)
     devDependencies:
+      '@bsc-web-benchmark/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@tsconfig/node20':
         specifier: ^20.1.4
         version: 20.1.4
@@ -136,6 +148,9 @@ importers:
 
   apps/benchmark:
     devDependencies:
+      '@bsc-web-benchmark/prettier-config':
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       '@playwright/test':
         specifier: ^1.43.1
         version: 1.43.1
@@ -143,12 +158,21 @@ importers:
         specifier: 20.12.7
         version: 20.12.7
 
+  packages/prettier-config:
+    dependencies:
+      prettier:
+        specifier: ^3.3.3
+        version: 3.3.3
+
   packages/web-vitals:
     dependencies:
       web-vitals:
         specifier: 3.5.2
         version: 3.5.2
     devDependencies:
+      '@bsc-web-benchmark/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       vite:
         specifier: 5.2.10
         version: 5.2.10(@types/node@20.12.7)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
@@ -2634,6 +2658,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   globals@11.12.0:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
@@ -3546,6 +3571,11 @@ packages:
   postcss@8.4.38:
     resolution: {integrity: sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==}
     engines: {node: ^10 || ^12 || >=14}
+
+  prettier@3.3.3:
+    resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   proc-log@3.0.0:
     resolution: {integrity: sha512-++Vn7NS4Xf9NacaU9Xq3URUuqZETPsf8L4j5/ckhaRYsfPeRyzGw+iDjFhV/Jr3uNmTvvddEJFWh5R1gRgUH8A==}
@@ -8071,6 +8101,8 @@ snapshots:
       nanoid: 3.3.7
       picocolors: 1.0.0
       source-map-js: 1.2.0
+
+  prettier@3.3.3: {}
 
   proc-log@3.0.0: {}
 

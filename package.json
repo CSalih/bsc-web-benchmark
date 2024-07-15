@@ -1,17 +1,18 @@
 {
-  "name": "bsc-web-benchmark",
-  "version": "0.1.0",
-  "license": "UNLICENSED",
-  "engines": {
-    "node": "^18",
-    "pnpm": ">=9"
-  },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "scripts": {
-    "build": "pnpm --stream --parallel --filter \"...{apps/**}\" build",
-    "bech:build-size": "node scripts/measure-build-size.js"
-  }
+    "name": "bsc-web-benchmark",
+    "version": "0.1.0",
+    "license": "UNLICENSED",
+    "engines": {
+        "node": "^18",
+        "pnpm": ">=9"
+    },
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "format": "pnpm --stream --parallel format",
+        "build": "pnpm --stream --parallel --filter \"...{apps/**}\" build",
+        "bech:build-size": "node scripts/measure-build-size.js"
+    }
 }

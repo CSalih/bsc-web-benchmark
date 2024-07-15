@@ -5,7 +5,6 @@ if (!process.env.MONGODB_API_KEY) {
   throw new Error("MONGODB_API_KEY is not defined");
 }
 
-
 const mongodbAPIAdapter = (metric: string) => {
   return {
     dataSource: "web-vital-analytics",
