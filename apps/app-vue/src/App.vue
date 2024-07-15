@@ -26,14 +26,6 @@ function select(id) {
 }
 
 function run() {
-  if (window.afterFrame) {
-    performance.mark("btn:run_start");
-    document.getElementById("run").click();
-    window.afterFrame(() => {
-      performance.mark("btn:run_end");
-    });
-  }
-
   setRows(buildData());
   selected.value = undefined;
 }
@@ -73,46 +65,6 @@ function swapRows() {
     _rows[998] = d1;
     setRows();
   }
-}
-
-// TODO: Evaluation purpose only!
-if (typeof __pw_recorderState === "undefined") {
-  // Source: https://github.com/andrewiggins/afterframe
-  let callbacks = [];
-  let channel = new MessageChannel();
-  let postMessage = function () {
-    this.postMessage(undefined);
-  }.bind(channel.port2);
-  channel.port1.onmessage = () => {
-    let toFlush = callbacks;
-    callbacks = [];
-    let time = performance.now();
-    for (let i = 0; i < toFlush.length; i++) {
-      toFlush[i](time);
-    }
-  };
-  channel = null;
-  // @ts-ignore
-  window.afterFrame = function (callback) {
-    if (callbacks.push(callback) === 1) {
-      requestAnimationFrame(postMessage);
-    }
-  };
-
-  // Observe performance metrics
-  const observer = new PerformanceObserver((list) => {
-    list.getEntries().forEach((entry) => {
-      if (entry.name === "btn:run_end") {
-        const measure = performance.measure(
-          "btn:run_duration",
-          "btn:run_start",
-          "btn:run_end",
-        );
-        console.log("Run time: ", measure.duration);
-      }
-    });
-  });
-  observer.observe({ entryTypes: ["mark"] });
 }
 </script>
 
