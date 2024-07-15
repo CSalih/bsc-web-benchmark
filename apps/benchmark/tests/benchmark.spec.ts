@@ -1,36 +1,42 @@
-import {test, expect, type Page} from '@playwright/test';
+import { resolve } from 'path';
+import {test} from '@playwright/test';
+import {afterFrame} from "../utils/after-frame";
 
 const app = {
   baseUrl: {
     angular: "http://localhost:3000",
     leptos: "http://localhost:3001",
     react: "http://localhost:3002",
-    vue: "http://localhost:3002",
+    vue: "http://localhost:3003",
   },
 }
 
-const baseUrl = (path: string)  => `${app.baseUrl.angular}${path}`
+const baseUrl = (path: string)  => `${app.baseUrl.vue}${path}`
 
 test.describe('initial rendering phase', () => {
 
   test('warm up phase', async ({page}) => {
-    const n = 10;
-
     // Ignore analytics when warming up
     await page.route('http://localhost:8000/api/v1/event', (route) => {
       route.fulfill({ status: 204 });
     });
 
-    for (let i = 0; i < n; i++) {
-      // open page
-      await page.goto(baseUrl("/"))
+    await page.addInitScript({
+      // TODO: parse script and replace project name, environment and version
+      path: resolve(__dirname, '../utils/web-vitals.js')
+    });
 
-      // TODO: Validate elements are available in the DOM
-      // await page.waitForSelector('h1')
+    // open page
+    await page.goto(baseUrl("/"), {
+      timeout: 1000, // 1 second
+      waitUntil: 'networkidle'
+    })
 
-      // click on an element to get Web Vitals like INP
-      await page.getByRole('heading', {name: 'Hello World'}).click()
-    }
+    // TODO: Validate elements are available in the DOM
+    // await page.waitForSelector('h1')
+
+    // click on an element to get Web Vitals like INP
+    await page.getByRole('heading').click()
   })
 
   test('test phase', async ({page}) => {
@@ -38,41 +44,54 @@ test.describe('initial rendering phase', () => {
 
     for (let i = 0; i < n; i++) {
       await page.goto(baseUrl("/"))
-      await page.getByRole('heading', {name: 'Hello World'}).click()
+      await page.getByRole('heading').click()
     }
   })
 })
 
 test.describe('responsiveness', () => {
 
-  test('warm up phase', async ({page}) => {
-    const n = 10;
-
+  test('warm up phase', async ({ page }) => {
     // Ignore analytics when warming up
     await page.route('http://localhost:8000/api/v1/event', (route) => {
       route.fulfill({ status: 204 });
     });
 
-    for (let i = 0; i < n; i++) {
-      // open page
-      await page.goto(baseUrl("/"), {
-        timeout: 1000, // 1 second
-        waitUntil: 'networkidle'
+    // Add custom script to measure frame rate
+    await page.addInitScript(afterFrame)
+
+    // open page
+    await page.goto(baseUrl("/"), {
+      timeout: 1000, // 1 second
+      waitUntil: 'networkidle'
+    })
+
+    // TODO: Validate elements are available in the DOM
+
+    // Create 1000 rows
+    await page.evaluate( () => {
+      performance.mark("btn:run_start");
+      document.getElementById("run").click()
+      // @ts-ignore: We are sure that the function is available in the window object
+      window.afterFrame(() => {
+        performance.mark("btn:run_end");
       })
+    });
 
-      // TODO: Validate elements are available in the DOM
+    // wait for table to load
+    await page
+      .locator('.table > tbody:nth-child(1) > tr:nth-child(1000) > td:nth-child(1)')
+      .waitFor({
+        state: 'attached',
+        timeout: 1000
+      });
 
-      // Create 1000 rows
-      await page.locator('#run').click();
-
-      // wait for table to load
-      await page
-        .locator('.table > tbody:nth-child(1) > tr:nth-child(1000) > td:nth-child(1)')
-        .waitFor({
-          state: 'attached',
-          timeout: 1000
-        });
-    }
+    // Calculate the duration of the action
+    const duration = await page.evaluate(() => {
+      const measure = performance.measure("btn:run_duration", "btn:run_start", "btn:run_end");
+      return measure.duration;
+    });
+    console.log("duration:", duration)
   })
 
   test('test phase', async ({page}) => {
@@ -95,7 +114,6 @@ test.describe('responsiveness', () => {
 
     // await wait(40);
     // await browser.stopTracing();
-
   })
 })
 
