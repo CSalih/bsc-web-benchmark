@@ -20,8 +20,8 @@ test("create_1000_rows", async ({ page }) => {
   });
 
   // Validate elements are available in the DOM
-  test.expect(page.locator("#run")).toBeVisible();
-  test.expect(page.locator(".table > tbody")).toBeEmpty();
+  await test.expect(page.locator("#run")).toBeVisible();
+  await test.expect(page.locator(".table > tbody")).toBeEmpty();
 
   // Create 1000 rows
   await page.evaluate(() => {
@@ -42,7 +42,7 @@ test("create_1000_rows", async ({ page }) => {
       state: "attached",
       timeout: 1000,
     });
-  test.expect(page.locator(".table > tbody > tr")).toHaveCount(1000);
+  await test.expect(page.locator(".table > tbody > tr")).toHaveCount(1000);
 
   // Calculate the duration of the action
   const measure = await page.evaluate(() => {
