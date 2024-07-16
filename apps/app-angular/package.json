@@ -7,7 +7,7 @@
     "ng": "ng",
     "dev": "ng serve --watch --configuration development --port 3000",
     "build": "ng build",
-    "build:docker": "docker build -t bsc/app-angular:latest .",
+    "build:docker": "docker build -t bsc/app-angular:latest ../.. --file Dockerfile",
     "format": "prettier --write \"src/**/*.ts\""
   },
   "prettier": "@bsc-web-benchmark/prettier-config",

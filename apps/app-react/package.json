@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite --port 3002",
     "build": "tsc && vite build",
-    "build:docker": "docker build -t bsc/app-react:latest .",
+    "build:docker": "docker build -t bsc/app-react:latest ../.. --file Dockerfile",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "prettier": "@bsc-web-benchmark/prettier-config",

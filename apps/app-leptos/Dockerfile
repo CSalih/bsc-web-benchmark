@@ -12,6 +12,7 @@ RUN wget https://github.com/trunk-rs/trunk/releases/download/v0.20.1/trunk-x86_6
     && tar -xvf trunk-x86_64-unknown-linux-musl.tar.gz \
     && mv trunk /usr/local/bin
 
+# TODO: improve caching performance
 COPY . .
 
 RUN trunk build --release --locked

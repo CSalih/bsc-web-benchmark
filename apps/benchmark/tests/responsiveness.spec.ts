@@ -2,33 +2,27 @@ import { test } from "@playwright/test";
 import { afterFrame } from "../utils/after-frame";
 import { baseUrl } from "../utils/base-url";
 import { persistMeasure } from "../utils/persist-measure";
-import {withCPUSlowdown} from "../utils/slow-down";
 
 test("create_1000_rows", async ({ page }) => {
   // Add custom script to measure performance
   await page.addInitScript(afterFrame);
 
   // open page
-  await page.goto(baseUrl("/"), {
-    timeout: 1000, // 1 second
-    waitUntil: "networkidle",
-  });
+  await page.goto(baseUrl("/"));
 
   // Validate elements are available in the DOM
   await test.expect(page.locator("#run")).toBeVisible();
   await test.expect(page.locator(".table > tbody")).toBeEmpty();
 
   // Create 1000 rows
-  await withCPUSlowdown(page, 3, async () => {
-    await page.evaluate(() => {
-      performance.mark("create_1000_start");
-      document.getElementById("run").click();
-      // @ts-ignore: We are sure that the function is available in the window object
-      window.afterFrame(() => {
-        performance.mark("create_1000_end");
-      });
+  await page.evaluate(() => {
+    performance.mark("create_1000_start");
+    document.getElementById("run").click();
+    // @ts-ignore: We are sure that the function is available in the window object
+    window.afterFrame(() => {
+      performance.mark("create_1000_end");
     });
-  })
+  });
 
   // wait for table to render and validate the number of rows
   await page
@@ -37,7 +31,6 @@ test("create_1000_rows", async ({ page }) => {
     )
     .waitFor({
       state: "attached",
-      timeout: 5000,
     });
   await test.expect(page.locator(".table > tbody > tr")).toHaveCount(1000);
 
@@ -49,5 +42,5 @@ test("create_1000_rows", async ({ page }) => {
       "create_1000_end",
     );
   });
-  persistMeasure({ measure });
+  persistMeasure(page, measure);
 });

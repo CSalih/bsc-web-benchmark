@@ -1,5 +1,5 @@
 import "./assets/main.css";
-import { memo, useReducer } from "react";
+import { Dispatch, memo, useReducer } from "react";
 
 const random = (max: number) => Math.round(Math.random() * 1000) % max;
 
@@ -60,8 +60,11 @@ const N = [
 ];
 
 let nextId = 1;
-
-const buildData = (count: number) => {
+type Data = {
+  id: number;
+  label: string;
+};
+const buildData = (count: number): Data[] => {
   const data = new Array(count);
 
   for (let i = 0; i < count; i++) {
@@ -74,9 +77,15 @@ const buildData = (count: number) => {
   return data;
 };
 
-const initialState = { data: [], selected: 0 };
+const initialState = { data: [] as Data[], selected: 0 };
 
-const listReducer = (state, action) => {
+type State = typeof initialState;
+type Action = {
+  id?: number;
+  type: string;
+};
+
+const listReducer = (state: State, action: Action): State => {
   const { data, selected } = state;
 
   switch (action.type) {
@@ -112,7 +121,7 @@ const listReducer = (state, action) => {
       return { data: data.filter((d) => d.id !== action.id), selected };
     }
     case "SELECT":
-      return { data, selected: action.id };
+      return { data, selected: action.id! };
     default:
       return state;
   }
@@ -121,7 +130,7 @@ const listReducer = (state, action) => {
 type RowProps = {
   selected: boolean;
   item: { id: number; label: string };
-  dispatch: (action: { type: string; id?: number }) => void;
+  dispatch: Dispatch<Action>;
 };
 
 const Row = memo(
@@ -146,7 +155,13 @@ const Row = memo(
     prevProps.item === nextProps.item,
 );
 
-const Button = ({ id, cb, title }) => (
+type ButtonProps = {
+  id: string;
+  cb: () => void;
+  title: string;
+};
+
+const Button = ({ id, cb, title }: ButtonProps) => (
   <div className="col-sm-6 smallpad">
     <button
       type="button"
@@ -159,8 +174,12 @@ const Button = ({ id, cb, title }) => (
   </div>
 );
 
+type JumbotronProps = {
+  dispatch: Dispatch<Action>;
+};
+
 const Jumbotron = memo(
-  ({ dispatch }) => (
+  ({ dispatch }: JumbotronProps) => (
     <div className="jumbotron">
       <div className="row">
         <div className="col-md-6">
