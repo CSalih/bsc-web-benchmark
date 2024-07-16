@@ -1,6 +1,4 @@
-import { resolve } from "path";
 import { test } from "@playwright/test";
-import { afterFrame } from "../utils/after-frame";
 
 test.describe("experimental: chromium only", () => {
   test.skip(({ browserName }) => browserName !== "chromium", "Chromium only!");

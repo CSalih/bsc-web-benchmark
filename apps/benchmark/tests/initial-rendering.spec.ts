@@ -1,7 +1,6 @@
 import { resolve } from "path";
 import { test } from "@playwright/test";
-import { afterFrame } from "../utils/after-frame";
-import { baseUrl } from "../utils/baseUrl";
+import { baseUrl } from "../utils/base-url";
 
 test.describe("initial rendering phase", () => {
   test("warm up phase", async ({ page }) => {
