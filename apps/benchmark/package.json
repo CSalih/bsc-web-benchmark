@@ -17,5 +17,8 @@
     "@bsc-web-benchmark/prettier-config": "workspace:*",
     "@playwright/test": "^1.45.2",
     "@types/node": "20.12.7"
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
   }
 }

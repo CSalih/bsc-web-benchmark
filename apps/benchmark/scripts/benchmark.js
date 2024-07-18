@@ -4,11 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
 const process = require("process");
-
-const testDate = new Date().toISOString();
+const { Command, Option } = require("commander");
 
 const apps = ["app-angular", "app-leptos", "app-react", "app-vue"];
-const ignoreApps = ["app-angular", "app-react", "app-vue"];
 const baseUrl = {
   "app-angular": "http://localhost:3000",
   "app-leptos": "http://localhost:3001",
@@ -66,13 +64,19 @@ const backupResults = (outputDir) => {
   });
 };
 
-const runBenchmark = (baseUrl) => {
+const runBenchmark = ({
+  baseUrl,
+  workers = 1,
+  repeatEach = 100,
+  maxFailures = 1,
+}) => {
   const benchmarkResult = spawnSync(
     "playwright",
     [
       "test",
-      "--repeat-each=100",
-      "--workers=4",
+      `--repeat-each=${repeatEach}`,
+      `--workers=${workers}`,
+      `--max-failures=${maxFailures}`,
       "tests/responsiveness.spec.ts",
     ],
     {
@@ -92,27 +96,92 @@ const runBenchmark = (baseUrl) => {
   }
 };
 
-const startWebServer = (app) => {
-  // docker run --rm -p 3000:80 bsc/app-angular:latest
-  // docker run --rm -p 3001:80 bsc/app-leptos:latest
-  // docker run --rm -p 3002:80 bsc/app-react:latest
-  // docker run --rm -p 3003:80 bsc/app-vue:latest
+const startWebServer = (app, baseUrl) => {
+  const name = `benchmark-${app}`;
+  const url = new URL(baseUrl);
+
+  console.log(`Starting ${app} server on port ${url.port} ...`);
+  const cmd = spawnSync(
+    "docker",
+    [
+      "run",
+      `--detach`,
+      "-p",
+      `${url.port}:80`,
+      "--name",
+      name,
+      `bsc/${app}:latest`,
+    ],
+    {
+      stdio: "ignore",
+    },
+  );
+
+  if (cmd.status !== 0) {
+    console.error(`Failed to start ${app} server! Exiting...`);
+    console.error(cmd.stderr.toString());
+    process.exit(1);
+  }
+  return name;
 };
 
-apps
-  .filter((app) => !ignoreApps.includes(app))
-  .forEach((app) => {
-    const url = baseUrl[app];
-    runBenchmark(url);
-
-    // backup results
-    console.log(`Backing up results for ${app}`);
-    const backupDir = path.join(__dirname, `../test-run/${app}-${testDate}`);
-    if (!fs.existsSync(backupDir)) {
-      fs.mkdirSync(backupDir, {
-        recursive: true,
-      });
-    }
-    backupResults(backupDir);
-    dumpSystemInfo(backupDir);
+const stopWebServer = (name) => {
+  console.log(`Stopping web server for ${name} ...`);
+  spawnSync("docker", ["stop", name], {
+    stdio: "ignore",
   });
+  spawnSync("docker", ["rm", name], {
+    stdio: "ignore",
+  });
+};
+
+const testDate = new Date().toISOString();
+const program = new Command();
+program
+  .name("benchmark")
+  .description("CLI to some JavaScript string utilities")
+  .version("0.1.0");
+
+program
+  .command("run", {
+    isDefault: true,
+  })
+  .description("Run the benchmark")
+  .addOption(new Option("-a, --app [app...]").default("all").choices(apps))
+  .addOption(new Option("-n, --repeat [repeat]").default(100))
+  .addOption(new Option("-j, --workers [workers]").default(1))
+  .action((options) => {
+    const appsToRun = apps.filter((app) => {
+      if (options.app === "all") {
+        return true;
+      }
+      return options.app.includes(app);
+    });
+
+    console.log("Running benchmarks for", appsToRun.join(", "));
+
+    appsToRun.forEach((app) => {
+      const url = baseUrl[app];
+      const container = startWebServer(app, url);
+      runBenchmark({
+        baseUrl: url,
+        workers: options.workers,
+        repeatEach: options.repeat,
+      });
+
+      // backup results
+      console.log(`Backing up results for ${app}`);
+      const backupDir = path.join(__dirname, `../test-run/${app}-${testDate}`);
+      if (!fs.existsSync(backupDir)) {
+        fs.mkdirSync(backupDir, {
+          recursive: true,
+        });
+      }
+      backupResults(backupDir);
+      dumpSystemInfo(backupDir);
+
+      stopWebServer(container);
+    });
+  });
+
+program.parse();
