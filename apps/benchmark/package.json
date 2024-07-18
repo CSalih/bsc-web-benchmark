@@ -5,8 +5,12 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "playwright test --ui --ui-port 8001",
-    "bench": "playwright test --repeat-each 100 --workers 1",
+    "bench": "node scripts/benchmark.js",
+    "bench:pw": "playwright test --repeat-each 100 --workers 1",
     "format": "prettier --write \"{tests,utils}/**/*.{js,ts,json}\""
+  },
+  "bin": {
+    "bechmark": "./scripts/benchmark.js"
   },
   "prettier": "@bsc-web-benchmark/prettier-config",
   "devDependencies": {

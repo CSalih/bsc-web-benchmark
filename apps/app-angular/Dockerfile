@@ -17,7 +17,7 @@ COPY apps/app-angular apps/app-angular
 RUN pnpm run build
 
 FROM nginx:1.26.0
-COPY --from=build /app/apps/app-react/dist/browser /usr/share/nginx/html
+COPY --from=build /app/apps/app-angular/dist/browser /usr/share/nginx/html
 
 EXPOSE 80
 

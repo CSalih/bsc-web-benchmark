@@ -1,10 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
+import * as process from "node:process";
+import "dotenv/config";
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -24,7 +20,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: "http://localhost:5173", // app-react
+    baseURL: process.env.APP_BASE_URL ?? "http://localhost:3000",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
@@ -49,10 +45,10 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: "docker run --rm -p '3003:80' bsc/app-vue:latest",
-    url: "http://127.0.0.1:3003",
-    reuseExistingServer: !process.env.CI,
-    timeout: 3000,
-  },
+  // webServer: {
+  //   command: "docker run --rm -p '3003:80' bsc/app-vue:latest",
+  //   url: "http://127.0.0.1:3003",
+  //   reuseExistingServer: !process.env.CI,
+  //   timeout: 3000,
+  // },
 });

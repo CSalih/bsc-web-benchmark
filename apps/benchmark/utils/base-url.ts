@@ -7,4 +7,4 @@ const app = {
   },
 };
 
-export const baseUrl = (path: string) => `${app.baseUrl.vue}${path}`;
+export const baseUrl = (path: string) => path;
