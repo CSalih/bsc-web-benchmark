@@ -1,0 +1,32 @@
+{
+  "name": "app-vue",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 4003",
+    "build": "vue-tsc --build --force && vite build",
+    "build:docker": "docker build -t bsc/app-vue:latest ../.. --file Dockerfile",
+    "format": "prettier --write \"src/**/*.{vue,js,ts}\""
+  },
+  "prettier": "@bsc-web-benchmark/prettier-config",
+  "dependencies": {
+    "insane": "^2.6.2",
+    "marked": "^13.0.2",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.33",
+    "vue-router": "^4.4.0"
+  },
+  "devDependencies": {
+    "@bsc-web-benchmark/prettier-config": "workspace:*",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/node": "^20.12.7",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/tsconfig": "^0.5.1",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vue-tsc": "^2.0.14"
+  },
+  "packageManager": "pnpm@9.5.0+sha256.dbdf5961c32909fb030595a9daa1dae720162e658609a8f92f2fa99835510ca5"
+}
