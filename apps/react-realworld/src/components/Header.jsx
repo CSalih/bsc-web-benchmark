@@ -66,7 +66,7 @@ function LoggedInNavbar() {
       </li>
 
       <li className="nav-item">
-        <Link to={`/@${currentUser?.username}`} className="nav-link">
+        <Link to={`/profile/${currentUser?.username}`} className="nav-link">
           <img
             src={
               currentUser?.image ||

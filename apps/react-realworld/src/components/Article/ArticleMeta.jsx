@@ -20,7 +20,7 @@ function ArticleMeta() {
 
   return (
     <div className="article-meta">
-      <Link to={`/@${article.author.username}`}>
+      <Link to={`/profile/${article.author.username}`}>
         <img
           src={
             article.author.image ??
@@ -31,7 +31,7 @@ function ArticleMeta() {
       </Link>
 
       <div className="info">
-        <Link to={`/@${article.author.username}`} className="author">
+        <Link to={`/profile/${article.author.username}`} className="author">
           {article.author.username}
         </Link>
 

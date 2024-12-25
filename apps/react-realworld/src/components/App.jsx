@@ -68,10 +68,10 @@ function App() {
             <Route path="/article/:slug" element={<Article />} />
             <Route path="/settings" element={<SettingsScreen />} />
             <Route
-              path="/@:username/favorites"
+              path="/profile/:username/favorites"
               element={<Profile isFavoritePage />}
             />
-            <Route path="/@:username" element={<Profile />} />
+            <Route path="/profile/:username" element={<Profile />} />
           </Routes>
         </Suspense>
       </>
