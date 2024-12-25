@@ -51,14 +51,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 const allLinks = computed<ArticlesListNavLink[]>(() => [
   {
-    name: "global-feed",
-    routeName: "global-feed",
-    title: "Global Feed",
-  },
-  {
     name: "my-feed",
     routeName: "my-feed",
     title: "Your Feed",
+  },
+  {
+    name: "global-feed",
+    routeName: "global-feed",
+    title: "Global Feed",
   },
   {
     name: "tag-feed",
