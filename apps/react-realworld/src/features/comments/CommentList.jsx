@@ -72,7 +72,7 @@ function Comment({ comment }) {
       </div>
 
       <div className="card-footer">
-        <Link to={`/@${comment.author.username}`} className="comment-author">
+        <Link to={`/profile/${comment.author.username}`} className="comment-author">
           <img
             className="comment-author-img"
             alt={comment.author.username}
@@ -83,7 +83,7 @@ function Comment({ comment }) {
           />
         </Link>
         &nbsp;
-        <Link to={`/@${comment.author.username}`} className="comment-author">
+        <Link to={`/profile/${comment.author.username}`} className="comment-author">
           {comment.author.username}
         </Link>
         <time className="date-posted" dateTime={comment.createdAt}>
