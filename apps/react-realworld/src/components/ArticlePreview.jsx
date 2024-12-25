@@ -53,7 +53,7 @@ function ArticlePreview({ article }) {
   return (
     <div className="article-preview">
       <div className="article-meta">
-        <Link to={`/@${article.author.username}`}>
+        <Link to={`/profile/${article.author.username}`}>
           <img
             src={
               article.author.image ||
@@ -64,7 +64,7 @@ function ArticlePreview({ article }) {
         </Link>
 
         <div className="info">
-          <Link className="author" to={`/@${article.author.username}`}>
+          <Link className="author" to={`/profile/${article.author.username}`}>
             {article.author.username}
           </Link>
           <time className="date" dateTime={article.createdAt}>

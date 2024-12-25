@@ -143,7 +143,7 @@ function ProfileTabs({ username, isFavorites }) {
         <li className="nav-item">
           <Link
             className={isFavorites ? "nav-link" : "nav-link active"}
-            to={`/@${username}`}
+            to={`/profile/${username}`}
           >
             My Articles
           </Link>
@@ -152,7 +152,7 @@ function ProfileTabs({ username, isFavorites }) {
         <li className="nav-item">
           <Link
             className={isFavorites ? "nav-link active" : "nav-link"}
-            to={`/@${username}/favorites`}
+            to={`/profile/${username}/favorites`}
           >
             Favorited Articles
           </Link>
