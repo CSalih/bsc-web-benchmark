@@ -1,5 +1,5 @@
 const API_ROOT =
-  import.meta.env.REACT_APP_BACKEND_URL ??
+  import.meta.env.VITE_API_HOST ??
   "https://conduit.productionready.io/api";
 
 /**
