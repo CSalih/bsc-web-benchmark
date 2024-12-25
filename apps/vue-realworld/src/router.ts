@@ -1,5 +1,5 @@
 import type { RouteParams, RouteRecordRaw } from "vue-router";
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import Home from "./pages/Home.vue";
 import { isAuthorized } from "./store/user";
 
@@ -76,7 +76,7 @@ export const routes: RouteRecordRaw[] = [
   },
 ];
 export const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 });
 
