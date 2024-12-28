@@ -104,7 +104,6 @@ function Comment({ comment }) {
 function CommentList() {
   const dispatch = useDispatch();
   const comments = useSelector(selectAllComments);
-  const isLoading = useSelector(selectIsLoading);
   const { slug } = useParams();
 
   useEffect(() => {
@@ -114,10 +113,6 @@ function CommentList() {
       fetchComments.abort();
     };
   }, [slug]);
-
-  if (isLoading) {
-    return <p>Loading comments</p>;
-  }
 
   return (
     <>

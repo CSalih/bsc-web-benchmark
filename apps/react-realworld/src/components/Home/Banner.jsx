@@ -11,11 +11,6 @@ import { selectIsAuthenticated } from '../../features/auth/authSlice';
  */
 function Banner() {
   const appName = useSelector((state) => state.common.appName);
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-
-  if (isAuthenticated) {
-    return null;
-  }
 
   return (
     <div className="banner">
