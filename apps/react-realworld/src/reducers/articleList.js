@@ -52,7 +52,7 @@ const initialState = {
   articlesCount: 0,
   currentPage: 0,
   articlesPerPage: 10,
-  tab: undefined,
+  tab: "all",
   tag: undefined,
   author: undefined,
   favorited: undefined,
