@@ -31,6 +31,7 @@
     </button>
 
     <button
+      v-if="displayFavoriteArticleButton"
       :aria-label="
         article.favorited ? 'Unfavorite article' : 'Favorite article'
       "
@@ -96,6 +97,9 @@ const displayFollowButton = computed(
   () =>
     isAuthorized.value &&
     user.value?.username !== article.value.author.username,
+);
+const displayFavoriteArticleButton = computed(
+  () => isAuthorized.value && user.value?.username !== article.value.author.username,
 );
 
 const { favoriteProcessGoing, favoriteArticle } = useFavoriteArticle({

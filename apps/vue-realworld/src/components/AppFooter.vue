@@ -8,13 +8,5 @@
         under MIT.
       </span>
     </div>
-    <div class="container">
-      <span class="attribution" style="margin: 0">
-        <a href="https://github.com/mutoe/vue3-realworld-example-app"
-          >Real world app</a
-        >
-        implementation using Vue v3 with Typescript and Composition Api
-      </span>
-    </div>
   </footer>
 </template>

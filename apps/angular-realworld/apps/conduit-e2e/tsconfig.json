@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es5", "dom"],
+    "types": ["cypress", "node"],
+    "esModuleInterop": true
+  },
+  "include": ["./**/*.ts"],
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.e2e.json"
+    }
+  ]
+}

@@ -4,8 +4,11 @@ import { useParams } from "react-router";
 import { marked } from "marked";
 
 import TagsList from "../../features/tags/TagsList.jsx";
-import { articlePageUnloaded, getArticle } from "../../reducers/article";
+import { articlePageUnloaded, getArticle } from "@/reducers/article.js";
 import ArticleMeta from "./ArticleMeta.jsx";
+import { Link } from "react-router-dom"
+import { favoriteArticle, unfavoriteArticle } from "@/reducers/articleList.js"
+import { selectIsAuthenticated } from "@/features/auth/authSlice.js"
 
 const CommentSection = lazy(
   () =>
@@ -13,6 +16,9 @@ const CommentSection = lazy(
       /* webpackChunkName: "CommentSection", webpackPrefetch: true  */ "../../features/comments/CommentSection.jsx"
     ),
 );
+
+const FAVORITED_CLASS = 'btn btn-sm btn-primary';
+const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
 
 /**
  * Show one article with its comments
@@ -25,10 +31,21 @@ function Article({ match }) {
   const dispatch = useDispatch();
   const article = useSelector((state) => state.article.article);
   const inProgress = useSelector((state) => state.article.inProgress);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const { slug } = useParams();
   const renderMarkdown = () => ({
     __html: marked(article.body, { sanitize: true }),
   });
+
+  const handleClick = (event) => {
+    event.preventDefault();
+
+    if (article.favorited) {
+      dispatch(unfavoriteArticle(article.slug));
+    } else {
+      dispatch(favoriteArticle(article.slug));
+    }
+  };
 
   useEffect(() => {
     const fetchArticle = dispatch(getArticle(slug));
@@ -53,6 +70,10 @@ function Article({ match }) {
     );
   }
 
+  const favoriteButtonClass = article.favorited
+    ? FAVORITED_CLASS
+    : NOT_FAVORITED_CLASS;
+
   return (
     <div className="article-page">
       <div className="banner">
@@ -72,6 +93,35 @@ function Article({ match }) {
         </div>
 
         <hr />
+
+        <div className="article-actions">
+          <div className="article-meta">
+            <Link to={`/profile/${article.author.username}`}>
+              <img
+                src={
+                  article.author.image ||
+                  'https://static.productionready.io/images/smiley-cyrus.jpg'
+                }
+                alt={article.author.username}
+              />
+            </Link>
+
+            <div className="info">
+              <Link className="author" to={`/profile/${article.author.username}`}>
+                {article.author.username}
+              </Link>
+              <time className="date" dateTime={article.createdAt}>
+                {new Date(article.createdAt).toDateString()}
+              </time>
+            </div>
+
+            {isAuthenticated && (
+              <button className={favoriteButtonClass} onClick={handleClick}>
+                <i className="ion-heart" /> {article.favoritesCount}
+              </button>
+            )}
+          </div>
+        </div>
 
         <Suspense fallback={<p>Loading comments</p>}>
           <CommentSection />
