@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
 members = [
-    "apps/app-leptos",
+    "apps/app-leptos", "apps/realworld-leptos",
 ]
 

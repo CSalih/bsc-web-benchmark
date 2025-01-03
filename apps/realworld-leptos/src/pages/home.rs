@@ -1,0 +1,211 @@
+use leptos::prelude::*;
+use crate::components::{ArticlePreviewList};
+use crate::models::{Article, Pagination, Tag};
+
+#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+struct GetArticlesQueryKey(u32);
+
+async fn get_tags() -> Result<Vec<String>, ServerFnError> {
+    // sqlx::query!("SELECT DISTINCT tag FROM ArticleTags")
+    //     .map(|x| x.tag)
+    //     .fetch_all(crate::database::get_db())
+    //     .await
+    //     .map_err(|x| {
+    //         tracing::error!("problem while fetching tags: {x:?}");
+    //         ServerFnError::ServerError("Problem while fetching tags".into())
+    //     })
+    Ok(vec![])
+}
+
+/// Renders the home page of your application.
+#[component]
+pub fn HomePage(username: ReadSignal<Option<String>>) -> impl IntoView {
+    let (articles, set_articles) = signal::<Vec<Article>>(vec![]);
+    let (pagination, set_pagination) = signal(Pagination::default());
+
+    let articles_fetcher = move || Article::load_articles(pagination.get());
+    let articles_res = LocalResource::new(articles_fetcher);
+
+    let is_authenticated = move || username.get().is_some();
+    let your_feed_href = move || {
+        if !is_authenticated() {
+            None
+        }
+        else {
+            Some(
+                pagination
+                    .get()
+                    .reset_page()
+                    .set_my_feed(true)
+                    .to_string()
+            )
+        }
+    };
+    let your_feed_class = move || {
+        format!(
+            "nav-link {}",
+            if username.with(Option::is_none) {
+                "disabled"
+            } else if !pagination.get().get_my_feed() {
+                "active"
+            } else {
+                ""
+            }
+        )
+    };
+    let pages = move || {
+        let articles_res_opt = articles_res.get();
+        if let Some(articles_res) = articles_res_opt.as_deref() {
+            let max_page = (articles_res.articles_count as f64 / pagination.get().get_amount() as f64).ceil() as u32;
+            (1..=max_page).collect::<Vec<u32>>()
+        } else { vec![] }
+    };
+
+    // TODO: This is not the right way.
+    Effect::new(move || {
+        let articles_res_opt = articles_res.get();
+        if let Some(articles_res_ref) = articles_res_opt.as_deref() {
+            set_articles.set(vec![]);
+            articles_res_ref.articles.iter().for_each(|x| {
+                set_articles.update(|a| a.push(x.clone()));
+            });
+        }
+    });
+
+    view! {
+        <div class="home-page">
+            <div class="banner">
+                <div class="container">
+                    <h1 class="logo-font">conduit</h1>
+                    <p>"A place to share your knowledge."</p>
+                </div>
+            </div>
+
+            <div class="container page">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="feed-toggle">
+                            <ul class="nav nav-pills outline-active">
+                                <Show when=move || { is_authenticated() }>
+                                    <li class="nav-item">
+                                        <button
+                                            class=your_feed_class
+                                            class:active=move || { pagination.get().get_my_feed() }
+                                            on:click=move |_| {
+                                                let pagination = pagination
+                                                    .get()
+                                                    .clone()
+                                                    .reset_page()
+                                                    .set_my_feed(true);
+                                                set_pagination.set(pagination);
+                                            }
+                                        >
+                                            "Your Feed"
+                                        </button>
+                                    </li>
+                                </Show>
+                                <li class="nav-item">
+                                    <button
+                                        class="nav-link"
+                                        class:active=move || { !pagination.get().get_my_feed() }
+                                        on:click=move |_| {
+                                            let pagination = pagination
+                                                .get()
+                                                .clone()
+                                                .reset_page()
+                                                .set_my_feed(false);
+                                            set_pagination.set(pagination);
+                                        }
+                                    >
+                                        "Global Feed"
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <Transition fallback=|| view! { <p>"Loading articles"</p> }>
+                            <ArticlePreviewList username=username articles=articles />
+                        </Transition>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="sidebar">
+                            <p>"Popular Tags"</p>
+                            <Transition fallback=|| view! { <p>"Loading popular tags"</p> }>
+                                <TagList />
+                            </Transition>
+                        </div>
+                    </div>
+
+                    <ul class="pagination">
+                        <For
+                            each=move || pages()
+                            key=|x| *x
+                            children=move |x| {
+                                let active = x == pagination.get().get_page();
+                                view! {
+                                    <li class=move || match active {
+                                        true => "page-item active",
+                                        false => "page-item",
+                                    }>
+                                        <button
+                                            class="page-link"
+                                            on:click=move |_| {
+                                                let pagination = pagination.get().clone().set_page(x);
+                                                set_pagination.set(pagination);
+                                            }
+                                        >
+                                            {x}
+                                        </button>
+                                    </li>
+                                }
+                            }
+                        />
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+#[component]
+fn TagList() -> impl IntoView {
+    let (tags, set_tags) = signal::<Vec<String>>(vec![]);
+
+    let tags_fetcher = move || Tag::load_tags();
+    let tags_res = LocalResource::new(tags_fetcher);
+
+
+    // TODO: This is not the right way.
+    Effect::new(move || {
+        let tags_res_opt = tags_res.get();
+        if let Some(tags_res) = tags_res_opt.as_deref() {
+            set_tags.set(vec![]);
+            tags_res.tags.iter().for_each(|x| {
+                set_tags.update(|a| a.push(x.clone()));
+            });
+        }
+    });
+
+    view! {
+        <div class="tag-list">
+            <Suspense fallback=move || view! { <p>"Loading Tags"</p> }>
+                <ErrorBoundary fallback=|_| {
+                    view! { <p class="error-messages text-xs-center">"Something went wrong."</p> }
+                }>
+                    <For
+                        each=move || tags.get().into_iter().enumerate()
+                        key=|(i, _)| *i
+                        children=move |(_, t): (usize, String)| {
+                            view! {
+                                <a class="tag-pill tag-default" href="">
+                                    {t}
+                                </a>
+                            }
+                        }
+                    />
+                </ErrorBoundary>
+            </Suspense>
+        </div>
+    }
+}
