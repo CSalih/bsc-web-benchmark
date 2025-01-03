@@ -1,0 +1,17 @@
+[package]
+name = "realworld-leptos"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+log = "0.4.21"
+console_log = "1.0.0"
+console_error_panic_hook = "0.1.7"
+
+leptos = { version = "0.7.2", features = ["csr"] }
+leptos_meta = "0.7.2"
+leptos_router = "0.7.2"
+
+serde = { version = "1.0.198", features = ["derive"] }
+reqwest = { version = "0.12.12", features = ["json"] }
+

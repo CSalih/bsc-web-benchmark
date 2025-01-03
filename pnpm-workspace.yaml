@@ -1,4 +1,6 @@
 packages:
     - 'apps/**'
-    - '!apps/angular-realworld'
+    - '!apps/realworld-angular'
+    - 'services/**'
+    - 'benchmark/**'
     - 'packages/*'
