@@ -6,19 +6,16 @@ import { marked } from "marked";
 import TagsList from "../../features/tags/TagsList.jsx";
 import { articlePageUnloaded, getArticle } from "@/reducers/article.js";
 import ArticleMeta from "./ArticleMeta.jsx";
-import { Link } from "react-router-dom"
-import { favoriteArticle, unfavoriteArticle } from "@/reducers/articleList.js"
-import { selectIsAuthenticated } from "@/features/auth/authSlice.js"
+import { Link } from "react-router-dom";
+import { favoriteArticle, unfavoriteArticle } from "@/reducers/articleList.js";
+import { selectIsAuthenticated } from "@/features/auth/authSlice.js";
 
 const CommentSection = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "CommentSection", webpackPrefetch: true  */ "../../features/comments/CommentSection.jsx"
-    ),
+  () => import("../../features/comments/CommentSection.jsx"),
 );
 
-const FAVORITED_CLASS = 'btn btn-sm btn-primary';
-const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
+const FAVORITED_CLASS = "btn btn-sm btn-primary";
+const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary";
 
 /**
  * Show one article with its comments
@@ -34,7 +31,7 @@ function Article({ match }) {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const { slug } = useParams();
   const renderMarkdown = () => ({
-    __html: marked(article.body, { sanitize: true }),
+    __html: marked(article.body, { async: false }),
   });
 
   const handleClick = (event) => {
@@ -100,14 +97,17 @@ function Article({ match }) {
               <img
                 src={
                   article.author.image ||
-                  'https://static.productionready.io/images/smiley-cyrus.jpg'
+                  "https://static.productionready.io/images/smiley-cyrus.jpg"
                 }
                 alt={article.author.username}
               />
             </Link>
 
             <div className="info">
-              <Link className="author" to={`/profile/${article.author.username}`}>
+              <Link
+                className="author"
+                to={`/profile/${article.author.username}`}
+              >
                 {article.author.username}
               </Link>
               <time className="date" dateTime={article.createdAt}>

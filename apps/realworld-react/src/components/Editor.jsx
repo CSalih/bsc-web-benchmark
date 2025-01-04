@@ -1,14 +1,14 @@
-import React, { useState, useEffect, memo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect, memo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import ListErrors from './ListErrors.jsx';
+import ListErrors from "./ListErrors.jsx";
 import {
   getArticle,
   createArticle,
   updateArticle,
   articlePageUnloaded,
-} from '../reducers/article';
-import { useNavigate, useParams } from 'react-router';
+} from "../reducers/article";
+import { useNavigate, useParams } from "react-router";
 
 /**
  * Editor component
@@ -20,10 +20,10 @@ function Editor({ match }) {
   const dispatch = useDispatch();
   const { article, errors, inProgress } = useSelector((state) => state.article);
   const { slug } = useParams();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [body, setBody] = useState('');
-  const [tagInput, setTagInput] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [body, setBody] = useState("");
+  const [tagInput, setTagInput] = useState("");
   const [tagList, setTagList] = useState([]);
   const navigate = useNavigate();
   /**
@@ -64,10 +64,10 @@ function Editor({ match }) {
       setBody(article.body);
       setTagList(article.tagList);
     } else {
-      setTitle('');
-      setDescription('');
-      setBody('');
-      setTagInput('');
+      setTitle("");
+      setDescription("");
+      setBody("");
+      setTagInput("");
       setTagList([]);
     }
   };
@@ -77,13 +77,13 @@ function Editor({ match }) {
    * @type {React.KeyboardEventHandler<HTMLInputElement>}
    */
   const addTag = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
 
       if (tagInput && !tagList.includes(tagInput))
         setTagList([...tagList, tagInput]);
 
-      setTagInput('');
+      setTagInput("");
     }
   };
 
@@ -111,7 +111,7 @@ function Editor({ match }) {
     };
 
     dispatch(slug ? updateArticle(article) : createArticle(article));
-    navigate('/');
+    navigate("/");
   };
 
   useEffect(() => {

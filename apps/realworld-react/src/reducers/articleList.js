@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import agent from '../agent';
-import { profilePageUnloaded } from './profile';
+import agent from "../agent";
+import { profilePageUnloaded } from "./profile";
 
 export const changeTab = (tab) => (dispatch) => {
   dispatch(articleListSlice.actions.changeTab(tab));
@@ -9,14 +9,14 @@ export const changeTab = (tab) => (dispatch) => {
 };
 
 export const getArticlesByAuthor = createAsyncThunk(
-  'articleList/getArticlesByAuthor',
-  ({ author, page } = {}) => agent.Articles.byAuthor(author, page)
+  "articleList/getArticlesByAuthor",
+  ({ author, page } = {}) => agent.Articles.byAuthor(author, page),
 );
 
 export const getAllArticles = createAsyncThunk(
-  'articleList/getAll',
+  "articleList/getAll",
   ({ page, author, tag, favorited } = {}, thunkApi) =>
-    thunkApi.getState().articleList.tab === 'feed'
+    thunkApi.getState().articleList.tab === "feed"
       ? agent.Articles.feed(page)
       : agent.Articles.all({
           page: page ?? thunkApi.getState().articleList.currentPage,
@@ -24,27 +24,27 @@ export const getAllArticles = createAsyncThunk(
           tag: tag ?? thunkApi.getState().articleList.tag,
           favorited: favorited ?? thunkApi.getState().articleList.favorited,
           limit: thunkApi.getState().articleList.articlesPerPage ?? 10,
-        })
+        }),
 );
 
 export const getArticlesByTag = createAsyncThunk(
-  'articleList/getArticlesByTag',
-  ({ tag, page } = {}) => agent.Articles.byTag(tag, page)
+  "articleList/getArticlesByTag",
+  ({ tag, page } = {}) => agent.Articles.byTag(tag, page),
 );
 
 export const getFavoriteArticles = createAsyncThunk(
-  'articleList/getFavoriteArticles',
-  ({ username, page } = {}) => agent.Articles.favoritedBy(username, page)
+  "articleList/getFavoriteArticles",
+  ({ username, page } = {}) => agent.Articles.favoritedBy(username, page),
 );
 
 export const favoriteArticle = createAsyncThunk(
-  'articleList/favoriteArticle',
-  agent.Articles.favorite
+  "articleList/favoriteArticle",
+  agent.Articles.favorite,
 );
 
 export const unfavoriteArticle = createAsyncThunk(
-  'articleList/unfavoriteArticle',
-  agent.Articles.unfavorite
+  "articleList/unfavoriteArticle",
+  agent.Articles.unfavorite,
 );
 
 const initialState = {
@@ -59,7 +59,7 @@ const initialState = {
 };
 
 const articleListSlice = createSlice({
-  name: 'articleList',
+  name: "articleList",
   initialState,
   reducers: {
     homePageUnloaded: () => initialState,
@@ -77,7 +77,7 @@ const articleListSlice = createSlice({
               favorited: action.payload.article.favorited,
               favoritesCount: action.payload.article.favoritesCount,
             }
-          : article
+          : article,
       );
     });
 
@@ -89,7 +89,7 @@ const articleListSlice = createSlice({
               favorited: action.payload.article.favorited,
               favoritesCount: action.payload.article.favoritesCount,
             }
-          : article
+          : article,
       );
     });
 
@@ -125,7 +125,7 @@ const articleListSlice = createSlice({
 
     builder.addMatcher(
       (action) => [profilePageUnloaded.type].includes(action.type),
-      () => initialState
+      () => initialState,
     );
   },
 });

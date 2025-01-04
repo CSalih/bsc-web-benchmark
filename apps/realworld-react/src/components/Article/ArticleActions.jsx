@@ -1,8 +1,8 @@
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import React, { memo } from 'react';
-import { useDispatch } from 'react-redux';
+import { Link, useParams, useNavigate } from "react-router-dom";
+import React, { memo } from "react";
+import { useDispatch } from "react-redux";
 
-import { deleteArticle } from '../../reducers/common';
+import { deleteArticle } from "../../reducers/common";
 
 /**
  * Show the actions to edit or delete an article
@@ -20,7 +20,7 @@ function ArticleActions() {
    */
   const removeArticle = () => {
     dispatch(deleteArticle(slug));
-    navigate('/');
+    navigate("/");
   };
 
   return (

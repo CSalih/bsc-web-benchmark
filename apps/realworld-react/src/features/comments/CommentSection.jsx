@@ -1,11 +1,11 @@
-import React, { memo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import React, { memo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 
-import ListErrors from '../../components/ListErrors.jsx';
-import { selectIsAuthenticated, selectUser } from '../auth/authSlice';
-import CommentList from './CommentList.jsx';
-import { createComment, selectErrors } from './commentsSlice';
+import ListErrors from "../../components/ListErrors.jsx";
+import { selectIsAuthenticated, selectUser } from "../auth/authSlice";
+import CommentList from "./CommentList.jsx";
+import { createComment, selectErrors } from "./commentsSlice";
 
 /**
  * Add comment
@@ -17,7 +17,7 @@ function CommentForm() {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
   const { slug } = useParams();
-  const [body, setBody] = useState('');
+  const [body, setBody] = useState("");
 
   /**
    * @type {React.ChangeEventHandler<HTMLTextAreaElement>}
@@ -32,7 +32,7 @@ function CommentForm() {
   const saveComment = (event) => {
     event.preventDefault();
     dispatch(createComment({ articleSlug: slug, comment: { body } }));
-    setBody('');
+    setBody("");
   };
 
   return (
@@ -53,7 +53,7 @@ function CommentForm() {
           alt={currentUser.username}
           src={
             currentUser.image ??
-            'https://static.productionready.io/images/smiley-cyrus.jpg'
+            "https://static.productionready.io/images/smiley-cyrus.jpg"
           }
         />
         <button className="btn btn-sm btn-primary" type="submit">

@@ -1,8 +1,8 @@
-import React, { memo, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { memo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { getArticlesByTag } from '../../reducers/articleList';
-import { getAllTags, selectIsLoading, selectTags } from './tagsSlice';
+import { getArticlesByTag } from "../../reducers/articleList";
+import { getAllTags, selectIsLoading, selectTags } from "./tagsSlice";
 
 /**
  * Show all tags in the sidebar

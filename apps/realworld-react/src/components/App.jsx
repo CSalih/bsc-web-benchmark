@@ -5,37 +5,14 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./Home/index.jsx";
 import { appLoad, clearRedirect } from "../reducers/common";
 import Header from "./Header.jsx";
-import Footer from "@/components/Footer.jsx"
+import Footer from "@/components/Footer.jsx";
 
-const Article = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "Article", webpackPrefetch: true  */ "./Article/index.jsx"
-    ),
-);
-const Editor = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "Editor", webpackPrefetch: true  */ "./Editor.jsx"
-    ),
-);
-const AuthScreen = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "AuthScreen", webpackPrefetch: true  */ "../features/auth/AuthScreen.jsx"
-    ),
-);
-const Profile = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "Profile", webpackPrefetch: true  */ "./Profile.jsx"
-    ),
-);
+const Article = lazy(() => import("./Article/index.jsx"));
+const Editor = lazy(() => import("./Editor.jsx"));
+const AuthScreen = lazy(() => import("../features/auth/AuthScreen.jsx"));
+const Profile = lazy(() => import("./Profile.jsx"));
 const SettingsScreen = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "SettingsScreen", webpackPrefetch: true  */ "../features/auth/SettingsScreen.jsx"
-    ),
+  () => import("../features/auth/SettingsScreen.jsx"),
 );
 
 function App() {

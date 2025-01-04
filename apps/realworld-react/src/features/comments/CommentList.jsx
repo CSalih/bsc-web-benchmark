@@ -1,6 +1,6 @@
-import React, { memo, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import React, { memo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 
 import {
   getCommentsForArticle,
@@ -8,7 +8,7 @@ import {
   selectAllComments,
   selectIsAuthor,
   selectIsLoading,
-} from './commentsSlice';
+} from "./commentsSlice";
 
 /**
  * Delete a comment
@@ -72,18 +72,24 @@ function Comment({ comment }) {
       </div>
 
       <div className="card-footer">
-        <Link to={`/profile/${comment.author.username}`} className="comment-author">
+        <Link
+          to={`/profile/${comment.author.username}`}
+          className="comment-author"
+        >
           <img
             className="comment-author-img"
             alt={comment.author.username}
             src={
               comment.author.image ??
-              'https://static.productionready.io/images/smiley-cyrus.jpg'
+              "https://static.productionready.io/images/smiley-cyrus.jpg"
             }
           />
         </Link>
         &nbsp;
-        <Link to={`/profile/${comment.author.username}`} className="comment-author">
+        <Link
+          to={`/profile/${comment.author.username}`}
+          className="comment-author"
+        >
           {comment.author.username}
         </Link>
         <time className="date-posted" dateTime={comment.createdAt}>

@@ -1,9 +1,9 @@
-import React, { memo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { memo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import ArticleList from '../ArticleList.jsx';
-import { changeTab } from '../../reducers/articleList';
-import { selectIsAuthenticated } from '../../features/auth/authSlice';
+import ArticleList from "../ArticleList.jsx";
+import { changeTab } from "../../reducers/articleList";
+import { selectIsAuthenticated } from "../../features/auth/authSlice";
 
 /**
  * Your feed tab
@@ -15,21 +15,21 @@ function YourFeedTab() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const currentTab = useSelector((state) => state.articleList.tab);
-  const isActiveTab = currentTab === 'feed';
+  const isActiveTab = currentTab === "feed";
 
   if (!isAuthenticated) {
     return null;
   }
 
   const dispatchChangeTab = () => {
-    dispatch(changeTab('feed'));
+    dispatch(changeTab("feed"));
   };
 
   return (
     <li className="nav-item">
       <button
         type="button"
-        className={isActiveTab ? 'nav-link active' : 'nav-link'}
+        className={isActiveTab ? "nav-link active" : "nav-link"}
         onClick={dispatchChangeTab}
       >
         Your Feed
@@ -47,21 +47,21 @@ function YourFeedTab() {
 function GlobalFeedTab() {
   const dispatch = useDispatch();
   const currentTab = useSelector((state) => state.articleList.tab);
-  const isActiveTab = currentTab === 'all';
+  const isActiveTab = currentTab === "all";
 
   /**
    * Change to all tab
    * @type{React.MouseEventHandler}
    */
   const dispatchChangeTab = () => {
-    dispatch(changeTab('all'));
+    dispatch(changeTab("all"));
   };
 
   return (
     <li className="nav-item">
       <button
         type="button"
-        className={isActiveTab ? 'nav-link active' : 'nav-link'}
+        className={isActiveTab ? "nav-link active" : "nav-link"}
         onClick={dispatchChangeTab}
       >
         Global Feed

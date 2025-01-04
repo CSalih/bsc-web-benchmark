@@ -2,15 +2,15 @@ import {
   createAsyncThunk,
   createSelector,
   createSlice,
-} from '@reduxjs/toolkit';
+} from "@reduxjs/toolkit";
 
-import agent from '../../agent';
+import agent from "../../agent";
 import {
   failureReducer,
   isApiError,
   loadingReducer,
   Status,
-} from '../../common/utils';
+} from "../../common/utils";
 
 /**
  * @typedef {object} User
@@ -36,7 +36,7 @@ import {
  * @param {string} argument.password
  */
 export const register = createAsyncThunk(
-  'auth/register',
+  "auth/register",
   async ({ username, email, password }, thunkApi) => {
     try {
       const {
@@ -54,7 +54,7 @@ export const register = createAsyncThunk(
   },
   {
     condition: (_, { getState }) => !selectIsLoading(getState()),
-  }
+  },
 );
 
 /**
@@ -65,7 +65,7 @@ export const register = createAsyncThunk(
  * @param {string} argument.password
  */
 export const login = createAsyncThunk(
-  'auth/login',
+  "auth/login",
   async ({ email, password }, thunkApi) => {
     try {
       const {
@@ -83,14 +83,14 @@ export const login = createAsyncThunk(
   },
   {
     condition: (_, { getState }) => !selectIsLoading(getState()),
-  }
+  },
 );
 
 /**
  * Send a get current user request
  */
 export const getUser = createAsyncThunk(
-  'auth/getUser',
+  "auth/getUser",
   async () => {
     const {
       user: { token, ...user },
@@ -100,7 +100,7 @@ export const getUser = createAsyncThunk(
   },
   {
     condition: (_, { getState }) => Boolean(selectAuthSlice(getState()).token),
-  }
+  },
 );
 
 /**
@@ -114,7 +114,7 @@ export const getUser = createAsyncThunk(
  * @param {string} argument.password
  */
 export const updateUser = createAsyncThunk(
-  'auth/updateUser',
+  "auth/updateUser",
   async ({ email, username, bio, image, password }, thunkApi) => {
     try {
       const {
@@ -133,7 +133,7 @@ export const updateUser = createAsyncThunk(
   {
     condition: (_, { getState }) =>
       selectIsAuthenticated(getState()) && !selectIsLoading(getState()),
-  }
+  },
 );
 
 /**
@@ -155,7 +155,7 @@ function successReducer(state, action) {
 }
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     /**
@@ -186,7 +186,7 @@ const authSlice = createSlice({
 
     builder.addMatcher(
       (action) => /auth\/.*\/pending/.test(action.type),
-      loadingReducer
+      loadingReducer,
     );
   },
 });
@@ -235,7 +235,7 @@ export const selectIsLoading = (state) =>
 export const selectIsAuthenticated = createSelector(
   (state) => selectAuthSlice(state).token,
   selectUser,
-  (token, user) => Boolean(token && user)
+  (token, user) => Boolean(token && user),
 );
 
 export default authSlice.reducer;

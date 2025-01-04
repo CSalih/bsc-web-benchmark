@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import agent from '../agent';
+import agent from "../agent";
 
 function serializeError(error) {
   if (error instanceof Error) {
@@ -12,7 +12,7 @@ function serializeError(error) {
     };
   }
 
-  if (typeof error === 'object' && error !== null) {
+  if (typeof error === "object" && error !== null) {
     return error;
   }
 
@@ -20,20 +20,20 @@ function serializeError(error) {
 }
 
 export const getArticle = createAsyncThunk(
-  'article/getArticle',
-  agent.Articles.get
+  "article/getArticle",
+  agent.Articles.get,
 );
 
 export const createArticle = createAsyncThunk(
-  'article/createArticle',
+  "article/createArticle",
   agent.Articles.create,
-  { serializeError }
+  { serializeError },
 );
 
 export const updateArticle = createAsyncThunk(
-  'article/updateArticle',
+  "article/updateArticle",
   agent.Articles.update,
-  { serializeError }
+  { serializeError },
 );
 
 const initialState = {
@@ -43,7 +43,7 @@ const initialState = {
 };
 
 const articleSlice = createSlice({
-  name: 'article',
+  name: "article",
   initialState,
   reducers: {
     articlePageUnloaded: () => initialState,
@@ -73,10 +73,10 @@ const articleSlice = createSlice({
     });
 
     builder.addMatcher(
-      (action) => action.type.endsWith('/pending'),
+      (action) => action.type.endsWith("/pending"),
       (state) => {
         state.inProgress = true;
-      }
+      },
     );
 
     builder.addDefaultCase((state) => {

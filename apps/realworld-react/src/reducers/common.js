@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import agent from '../agent';
-import { articlePageUnloaded, createArticle, updateArticle } from './article';
-import { profilePageUnloaded } from './profile';
-import { homePageUnloaded } from './articleList';
+import agent from "../agent";
+import { articlePageUnloaded, createArticle, updateArticle } from "./article";
+import { profilePageUnloaded } from "./profile";
+import { homePageUnloaded } from "./articleList";
 import {
   getUser,
   login,
@@ -11,11 +11,11 @@ import {
   register,
   setToken,
   updateUser,
-} from '../features/auth/authSlice';
+} from "../features/auth/authSlice";
 
 export const deleteArticle = createAsyncThunk(
-  'common/deleteArticle',
-  agent.Articles.del
+  "common/deleteArticle",
+  agent.Articles.del,
 );
 
 export const appLoad = (token) => (dispatch) => {
@@ -29,14 +29,14 @@ export const appLoad = (token) => (dispatch) => {
 };
 
 const initialState = {
-  appName: 'Conduit',
+  appName: "Conduit",
   appLoaded: false,
   viewChangeCounter: 0,
   redirectTo: undefined,
 };
 
 const commonSlice = createSlice({
-  name: 'common',
+  name: "common",
   initialState,
   reducers: {
     loadApp(state) {
@@ -48,23 +48,23 @@ const commonSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(deleteArticle.fulfilled, (state) => {
-      state.redirectTo = '/';
+      state.redirectTo = "/";
     });
 
     builder.addCase(updateUser.fulfilled, (state, action) => {
-      state.redirectTo = '/';
+      state.redirectTo = "/";
     });
 
     builder.addCase(login.fulfilled, (state, action) => {
-      state.redirectTo = '/';
+      state.redirectTo = "/";
     });
 
     builder.addCase(register.fulfilled, (state, action) => {
-      state.redirectTo = '/';
+      state.redirectTo = "/";
     });
 
     builder.addCase(logout, (state) => {
-      state.redirectTo = '/';
+      state.redirectTo = "/";
     });
 
     builder.addCase(createArticle.fulfilled, (state, action) => {
@@ -84,7 +84,7 @@ const commonSlice = createSlice({
         ].includes(action.type),
       (state) => {
         state.viewChangeCounter++;
-      }
+      },
     );
   },
 });

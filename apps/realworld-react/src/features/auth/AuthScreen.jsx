@@ -1,10 +1,10 @@
-import React, { memo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { memo, useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 
-import ListErrors from '../../components/ListErrors.jsx';
-import { login, register, selectErrors, selectIsLoading } from './authSlice';
+import ListErrors from "../../components/ListErrors.jsx";
+import { login, register, selectErrors, selectIsLoading } from "./authSlice";
 
 /**
  * Auth screen component
@@ -13,9 +13,9 @@ import { login, register, selectErrors, selectIsLoading } from './authSlice';
  * <AuthScreen />
  */
 function AuthScreen({ isRegisterScreen }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const dispatch = useDispatch();
   const errors = useSelector(selectErrors);
   const inProgress = useSelector(selectIsLoading);
@@ -49,15 +49,15 @@ function AuthScreen({ isRegisterScreen }) {
     dispatch(
       isRegisterScreen
         ? register({ username, email, password })
-        : login({ email, password })
+        : login({ email, password }),
     ).then((action) => {
-      if (action.meta.requestStatus === 'rejected') {
+      if (action.meta.requestStatus === "rejected") {
         return;
       }
       if (isRegisterScreen) {
-        navigate('/login');
+        navigate("/login");
       } else {
-        navigate('/');
+        navigate("/");
       }
     });
   };
@@ -68,7 +68,7 @@ function AuthScreen({ isRegisterScreen }) {
         <div className="row">
           <div className="col-md-6 offset-md-3 col-xs-12">
             <h1 className="text-xs-center">
-              {isRegisterScreen ? 'Sign Up' : 'Sign In'}
+              {isRegisterScreen ? "Sign Up" : "Sign In"}
             </h1>
             <p className="text-xs-center">
               {isRegisterScreen ? (
@@ -123,7 +123,7 @@ function AuthScreen({ isRegisterScreen }) {
                   className="btn btn-lg btn-primary pull-xs-right"
                   type="submit"
                 >
-                  {isRegisterScreen ? 'Sign up' : 'Sign in'}
+                  {isRegisterScreen ? "Sign up" : "Sign in"}
                 </button>
               </fieldset>
             </form>

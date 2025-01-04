@@ -1,12 +1,12 @@
-import React, { memo } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import React, { memo } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-import { favoriteArticle, unfavoriteArticle } from '../reducers/articleList';
-import TagsList from '../features/tags/TagsList.jsx';
+import { favoriteArticle, unfavoriteArticle } from "../reducers/articleList";
+import TagsList from "../features/tags/TagsList.jsx";
 
-const FAVORITED_CLASS = 'btn btn-sm btn-primary';
-const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
+const FAVORITED_CLASS = "btn btn-sm btn-primary";
+const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary";
 
 /**
  * Show a preview of an article
@@ -57,7 +57,7 @@ function ArticlePreview({ article }) {
           <img
             src={
               article.author.image ||
-              'https://static.productionready.io/images/smiley-cyrus.jpg'
+              "https://static.productionready.io/images/smiley-cyrus.jpg"
             }
             alt={article.author.username}
           />

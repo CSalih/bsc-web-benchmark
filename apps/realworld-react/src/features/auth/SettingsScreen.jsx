@@ -1,8 +1,8 @@
-import React, { memo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import React, { memo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-import ListErrors from '../../components/ListErrors.jsx';
+import ListErrors from "../../components/ListErrors.jsx";
 import {
   logout,
   selectErrors,
@@ -10,7 +10,7 @@ import {
   selectIsLoading,
   selectUser,
   updateUser,
-} from './authSlice';
+} from "./authSlice";
 
 /**
  * Settings form component
@@ -32,12 +32,12 @@ import {
 function SettingsForm({ currentUser, onSaveSettings }) {
   const [image, setImage] = useState(
     currentUser?.image ??
-      'https://static.productionready.io/images/smiley-cyrus.jpg'
+      "https://static.productionready.io/images/smiley-cyrus.jpg",
   );
-  const [username, setUsername] = useState(currentUser?.username ?? '');
-  const [bio, setBio] = useState(currentUser?.bio ?? '');
-  const [email, setEmail] = useState(currentUser?.email ?? '');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState(currentUser?.username ?? "");
+  const [bio, setBio] = useState(currentUser?.bio ?? "");
+  const [email, setEmail] = useState(currentUser?.email ?? "");
+  const [password, setPassword] = useState("");
   const isLoading = useSelector(selectIsLoading);
 
   /**
