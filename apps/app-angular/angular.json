@@ -50,7 +50,7 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/main.css", "src/bootstrap.min.css"],
+            "styles": ["src/bootstrap.min.css", "src/main.css"],
             "scripts": []
           },
           "configurations": {
