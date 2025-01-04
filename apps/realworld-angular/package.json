@@ -25,7 +25,8 @@
     "update:check": "ng update",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "workspace-generator": "nx workspace-generator"
+    "workspace-generator": "nx workspace-generator",
+    "build:docker": "docker build -t bsc/realworld-angular:latest . --file Dockerfile"
   },
   "private": true,
   "dependencies": {
