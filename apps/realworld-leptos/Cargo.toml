@@ -3,6 +3,19 @@ name = "realworld-leptos"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "realworld-leptos"
+path = "src/main.rs"
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = 'z'
+lto = true
+codegen-units = 1
+
+[package.metadata.leptos]
+lib-profile-release = "wasm-release"
+
 [dependencies]
 log = "0.4.21"
 console_log = "1.0.0"
