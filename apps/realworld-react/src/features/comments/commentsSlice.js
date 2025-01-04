@@ -3,11 +3,11 @@ import {
   createEntityAdapter,
   createSelector,
   createSlice,
-} from '@reduxjs/toolkit';
+} from "@reduxjs/toolkit";
 
-import agent from '../../agent';
-import { isApiError, loadingReducer, Status } from '../../common/utils';
-import { selectIsAuthenticated, selectUser } from '../auth/authSlice';
+import agent from "../../agent";
+import { isApiError, loadingReducer, Status } from "../../common/utils";
+import { selectIsAuthenticated, selectUser } from "../auth/authSlice";
 
 /**
  * @typedef  {object}   CommentsState
@@ -30,7 +30,7 @@ const commentAdapter = createEntityAdapter({
  * @param {string} argument.comment.body
  */
 export const createComment = createAsyncThunk(
-  'comments/createComment',
+  "comments/createComment",
   async ({ articleSlug, comment: newComment }, thunkApi) => {
     try {
       const { comment } = await agent.Comments.create(articleSlug, newComment);
@@ -48,7 +48,7 @@ export const createComment = createAsyncThunk(
     condition: (_, { getState }) =>
       selectIsAuthenticated(getState()) && !selectIsLoading(getState()),
     getPendingMeta: (_, { getState }) => ({ author: selectUser(getState()) }),
-  }
+  },
 );
 
 /**
@@ -57,7 +57,7 @@ export const createComment = createAsyncThunk(
  * @param {string} articleSlug
  */
 export const getCommentsForArticle = createAsyncThunk(
-  'comments/getCommentsForArticle',
+  "comments/getCommentsForArticle",
   async (articleSlug) => {
     const { comments } = await agent.Comments.forArticle(articleSlug);
 
@@ -65,7 +65,7 @@ export const getCommentsForArticle = createAsyncThunk(
   },
   {
     condition: (_, { getState }) => !selectIsLoading(getState()),
-  }
+  },
 );
 
 /**
@@ -76,7 +76,7 @@ export const getCommentsForArticle = createAsyncThunk(
  * @param {number} argument.commentId
  */
 export const removeComment = createAsyncThunk(
-  'comments/removeComment',
+  "comments/removeComment",
   async ({ articleSlug, commentId }) => {
     await agent.Comments.delete(articleSlug, commentId);
   },
@@ -85,7 +85,7 @@ export const removeComment = createAsyncThunk(
       selectIsAuthenticated(getState()) &&
       selectCommentsSlice(getState()).ids.includes(commentId) &&
       !selectIsLoading(getState()),
-  }
+  },
 );
 
 /**
@@ -96,7 +96,7 @@ const initialState = commentAdapter.getInitialState({
 });
 
 const commentsSlice = createSlice({
-  name: 'comments',
+  name: "comments",
   initialState,
   reducers: {},
   extraReducers(builder) {
@@ -140,7 +140,7 @@ const commentsSlice = createSlice({
 
     builder.addMatcher(
       (action) => /comments\/.*\/pending/.test(action.type),
-      loadingReducer
+      loadingReducer,
     );
   },
 });
@@ -182,7 +182,8 @@ export const selectIsAuthor = (commentId) =>
   createSelector(
     selectCommentById(commentId),
     selectUser,
-    (comment, currentUser) => currentUser?.username === comment?.author.username
+    (comment, currentUser) =>
+      currentUser?.username === comment?.author.username,
   );
 
 /**

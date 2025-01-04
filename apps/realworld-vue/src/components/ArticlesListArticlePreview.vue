@@ -5,7 +5,13 @@
         name="profile"
         :params="{ username: props.article.author.username }"
       >
-        <img :src="article.author.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'" :alt="props.article.author.username" />
+        <img
+          :src="
+            article.author.image ||
+            'https://static.productionready.io/images/smiley-cyrus.jpg'
+          "
+          :alt="props.article.author.username"
+        />
       </AppLink>
       <div class="info">
         <AppLink

@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { memo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { getAllArticles } from '../reducers/articleList';
+import { getAllArticles } from "../reducers/articleList";
 
 /**
  * Show a list with the available pages
@@ -14,7 +14,7 @@ function ListPagination() {
   const articlesCount = useSelector((state) => state.articleList.articlesCount);
   const currentPage = useSelector((state) => state.articleList.currentPage);
   const articlesPerPage = useSelector(
-    (state) => state.articleList.articlesPerPage
+    (state) => state.articleList.articlesPerPage,
   );
 
   if (articlesCount <= articlesPerPage) {
@@ -23,7 +23,7 @@ function ListPagination() {
 
   const pages = Array.from(
     { length: Math.ceil(articlesCount / articlesPerPage) },
-    (_, number) => number
+    (_, number) => number,
   );
 
   const handleClickPage = (page) => () => {
@@ -38,7 +38,7 @@ function ListPagination() {
 
           return (
             <li
-              className={isActivePage ? 'page-item active' : 'page-item'}
+              className={isActivePage ? "page-item active" : "page-item"}
               onClick={handleClickPage(page)}
               key={page.toString()}
             >

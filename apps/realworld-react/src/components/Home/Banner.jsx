@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { memo } from "react";
+import { useSelector } from "react-redux";
 
-import { selectIsAuthenticated } from '../../features/auth/authSlice';
+import { selectIsAuthenticated } from "../../features/auth/authSlice";
 
 /**
  * Shows a banner for new users

@@ -1,8 +1,8 @@
-import React, { memo } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { memo } from "react";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import { selectIsAuthenticated, selectUser } from '../features/auth/authSlice';
+import { selectIsAuthenticated, selectUser } from "../features/auth/authSlice";
 
 /**
  * Navbar when there isn't a logged user
@@ -65,22 +65,21 @@ function LoggedInNavbar() {
         </Link>
       </li>
 
-
-        <li className="nav-item">
-          <Link to={`/profile/${currentUser?.username}`} className="nav-link">
-            {currentUser?.image && (
-              <img
-                src={
-                  currentUser.image ||
-                  "https://static.productionready.io/images/smiley-cyrus.jpg"
-                }
-                className="user-pic"
-                alt={currentUser?.username}
-              />
-            )}
-            {currentUser?.username}
-          </Link>
-        </li>
+      <li className="nav-item">
+        <Link to={`/profile/${currentUser?.username}`} className="nav-link">
+          {currentUser?.image && (
+            <img
+              src={
+                currentUser.image ||
+                "https://static.productionready.io/images/smiley-cyrus.jpg"
+              }
+              className="user-pic"
+              alt={currentUser?.username}
+            />
+          )}
+          {currentUser?.username}
+        </Link>
+      </li>
     </ul>
   );
 }
@@ -92,8 +91,8 @@ function LoggedInNavbar() {
  * <Header />
  */
 function Header() {
-  const isAuthenticated = useSelector(selectIsAuthenticated)
-  const appName = useSelector((state) => state.common.appName)
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const appName = useSelector((state) => state.common.appName);
 
   return (
     <nav className="navbar navbar-light">
