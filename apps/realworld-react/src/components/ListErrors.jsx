@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo } from "react";
 
 /**
  * List errors component
@@ -21,7 +21,7 @@ function ListErrors({ errors }) {
   }
 
   const errorMessages = Object.entries(errors).flatMap(([property, messages]) =>
-    messages.map((message) => `${property} ${message}`)
+    messages.map((message) => `${property} ${message}`),
   );
 
   return (

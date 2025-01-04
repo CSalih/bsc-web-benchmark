@@ -5,13 +5,13 @@
  */
 export const Status = {
   /** The initial state */
-  IDLE: 'idle',
+  IDLE: "idle",
   /** The loading state */
-  LOADING: 'loading',
+  LOADING: "loading",
   /** The success state */
-  SUCCESS: 'success',
+  SUCCESS: "success",
   /** The error state */
-  FAILURE: 'failure',
+  FAILURE: "failure",
 };
 
 /**
@@ -21,7 +21,7 @@ export const Status = {
  * @returns {boolean} error is ApiError
  */
 export function isApiError(error) {
-  return typeof error === 'object' && error !== null && 'errors' in error;
+  return typeof error === "object" && error !== null && "errors" in error;
 }
 
 /**

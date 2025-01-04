@@ -1,16 +1,19 @@
-import {type Page} from "@playwright/test";
+import { type Page } from "@playwright/test";
 import { test } from "@playwright/test";
 
-
-export const withCPUSlowdown = async (page: Page, rate: number, fn: () => Promise<void>) => {
+export const withCPUSlowdown = async (
+  page: Page,
+  rate: number,
+  fn: () => Promise<void>,
+) => {
   const cdp = await page.context().newCDPSession(page);
   await cdp.send("Emulation.setCPUThrottlingRate", {
     rate,
   });
-  test.info().annotations.push(({
-    type: 'emulation',
-    description: `CPUThrottlingRate set to ${rate}x slowdown`
-  }))
+  test.info().annotations.push({
+    type: "emulation",
+    description: `CPUThrottlingRate set to ${rate}x slowdown`,
+  });
 
   await fn();
 
@@ -18,4 +21,4 @@ export const withCPUSlowdown = async (page: Page, rate: number, fn: () => Promis
   await cdp.send("Emulation.setCPUThrottlingRate", {
     rate: 1,
   });
-}
+};

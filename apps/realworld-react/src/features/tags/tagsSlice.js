@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import agent from '../../agent';
-import { Status } from '../../common/utils';
+import agent from "../../agent";
+import { Status } from "../../common/utils";
 
 /**
  * @typedef {object}    TagsState
@@ -12,7 +12,7 @@ import { Status } from '../../common/utils';
 /**
  * Fetch all tags
  */
-export const getAllTags = createAsyncThunk('tags/getAllTags', async () => {
+export const getAllTags = createAsyncThunk("tags/getAllTags", async () => {
   const { tags } = await agent.Tags.getAll();
 
   return tags;
@@ -29,7 +29,7 @@ const initialState = {
 };
 
 const tagsSlice = createSlice({
-  name: 'tags',
+  name: "tags",
   initialState,
   reducers: {},
   extraReducers(builder) {

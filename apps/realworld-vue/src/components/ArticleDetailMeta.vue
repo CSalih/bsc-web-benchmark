@@ -99,7 +99,9 @@ const displayFollowButton = computed(
     user.value?.username !== article.value.author.username,
 );
 const displayFavoriteArticleButton = computed(
-  () => isAuthorized.value && user.value?.username !== article.value.author.username,
+  () =>
+    isAuthorized.value &&
+    user.value?.username !== article.value.author.username,
 );
 
 const { favoriteProcessGoing, favoriteArticle } = useFavoriteArticle({

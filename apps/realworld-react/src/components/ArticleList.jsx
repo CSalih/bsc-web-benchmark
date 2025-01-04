@@ -1,8 +1,8 @@
-import React, { memo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { memo } from "react";
+import { useSelector } from "react-redux";
 
-import ArticlePreview from './ArticlePreview.jsx';
-import ListPagination from './ListPagination.jsx';
+import ArticlePreview from "./ArticlePreview.jsx";
+import ListPagination from "./ListPagination.jsx";
 
 /**
  * List all articles and show pagination
