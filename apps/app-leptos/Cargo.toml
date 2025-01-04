@@ -3,6 +3,23 @@ name = "app-leptos"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "app-leptos"
+path = "src/main.rs"
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = 'z'
+lto = true
+codegen-units = 1
+
+[package.metadata.leptos]
+lib-profile-release = "wasm-release"
+
 [dependencies]
-leptos = { version = "0.6.11", features = ["csr"] }
+leptos = { version = "0.7.2", features = ["csr"] }
+
+# used in rand, but we need to enable js feature
+getrandom = { version = "0.2.15", features = ["js"] }
 rand = { version = "0.8.5", features = ["small_rng"] }
+console_error_panic_hook = "0.1.7"
