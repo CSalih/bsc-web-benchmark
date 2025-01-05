@@ -1,4 +1,4 @@
-FROM node:18 AS build
+FROM node:20 AS build
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -16,7 +16,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY apps/app-vue apps/app-vue
 RUN pnpm run build
 
-FROM nginx:1.26.0
+FROM nginx:1.27.3-alpine
 COPY --from=build /app/apps/app-vue/dist /usr/share/nginx/html
 
 EXPOSE 80
