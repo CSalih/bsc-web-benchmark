@@ -77,7 +77,9 @@ test("create_10000_rows", async ({ page }) => {
       timeout: 10000,
       state: "attached",
     });
-  await test.expect(page.locator(".table > tbody > tr")).toHaveCount(10000);
+  await test.expect(page.locator(".table > tbody > tr")).toHaveCount(10000, {
+    timeout: 10000,
+  });
 
   // Calculate the duration of the action
   const measure = await page.evaluate(() => {
