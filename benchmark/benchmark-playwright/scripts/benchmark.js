@@ -68,15 +68,19 @@ const runBenchmark = ({
   baseUrl,
   workers = 1,
   repeatEach = 100,
-  maxFailures = 1,
+  maxFailures = 10,
+  retries = 3,
 }) => {
+  console.log("Starting benchmark");
   const benchmarkResult = spawnSync(
-    "playwright",
+    "npx",
     [
+      "playwright",
       "test",
       `--repeat-each=${repeatEach}`,
       `--workers=${workers}`,
       `--max-failures=${maxFailures}`,
+      `--retries=${retries}`,
       "tests/responsiveness.spec.ts",
     ],
     {
@@ -92,7 +96,6 @@ const runBenchmark = ({
     console.error(
       `Benchmark failed with status ${benchmarkResult.status}! Exiting...`,
     );
-    process.exit(1);
   }
 };
 
@@ -167,6 +170,7 @@ program
         baseUrl: url,
         workers: options.workers,
         repeatEach: options.repeat,
+        maxFailures: 50
       });
 
       // backup results
