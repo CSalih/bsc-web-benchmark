@@ -10,14 +10,14 @@ RUN corepack enable
 COPY package.json .
 COPY pnpm-lock.yaml .
 COPY pnpm-workspace.yaml .
-COPY apps/app-vue/package.json apps/app-vue/package.json
+COPY apps/realworld-vue/package.json apps/realworld-vue/package.json
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-COPY apps/app-vue apps/app-vue
+COPY apps/realworld-vue apps/realworld-vue
 RUN pnpm run build
 
 FROM nginx:1.27.3-alpine
-COPY --from=build /app/apps/app-vue/dist /usr/share/nginx/html
+COPY --from=build /app/apps/realworld-vue/dist /usr/share/nginx/html
 
 EXPOSE 80
 

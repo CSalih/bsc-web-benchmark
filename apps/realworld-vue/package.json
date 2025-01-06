@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite --port 4003",
     "build": "vue-tsc --build --force && vite build",
-    "build:docker": "docker build -t bsc/app-vue:latest ../.. --file Dockerfile",
+    "build:docker": "docker build -t bsc/realworld-vue:latest ../.. --file Dockerfile",
     "format": "prettier --write \"src/**/*.{vue,js,ts}\""
   },
   "prettier": "@bsc-web-benchmark/prettier-config",

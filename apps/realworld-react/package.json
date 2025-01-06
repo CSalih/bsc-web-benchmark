@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite --port 4002",
     "build": "tsc && vite build",
-    "build:docker": "docker build -t bsc/react-realworld:latest ../.. --file Dockerfile",
+    "build:docker": "docker build -t bsc/realworld-react:latest ../.. --file Dockerfile",
     "format": "prettier --write \"src/**/*.{js,jsx}\""
   },
   "prettier": "@bsc-web-benchmark/prettier-config",

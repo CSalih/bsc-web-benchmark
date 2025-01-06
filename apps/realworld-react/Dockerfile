@@ -10,14 +10,14 @@ RUN corepack enable
 COPY package.json .
 COPY pnpm-lock.yaml .
 COPY pnpm-workspace.yaml .
-COPY apps/react-realworld/package.json apps/react-realworld/package.json
+COPY apps/realworld-react/package.json apps/realworld-react/package.json
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-COPY apps/react-realworld apps/react-realworld
+COPY apps/realworld-react apps/realworld-react
 RUN pnpm run build
 
 FROM nginx:1.27.3-alpine
-COPY --from=build /app/apps/react-realworld/dist /usr/share/nginx/html
+COPY --from=build /app/apps/realworld-react/dist /usr/share/nginx/html
 
 EXPOSE 80
 
