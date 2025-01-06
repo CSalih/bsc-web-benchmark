@@ -65,10 +65,9 @@ pub fn HomePage(username: ReadSignal<Option<String>>) -> impl IntoView {
     Effect::new(move || {
         let articles_res_opt = articles_res.get();
         if let Some(articles_res_ref) = articles_res_opt.as_deref() {
+            set_articles.set(articles_res_ref.articles.clone());
+        } else {
             set_articles.set(vec![]);
-            articles_res_ref.articles.iter().for_each(|x| {
-                set_articles.update(|a| a.push(x.clone()));
-            });
         }
     });
 
@@ -124,6 +123,18 @@ pub fn HomePage(username: ReadSignal<Option<String>>) -> impl IntoView {
                         </div>
 
                         <Transition fallback=|| view! { <p>"Loading articles"</p> }>
+                            // {move || {
+                            //     articles_res
+                            //         .get()
+                            //         .unwrap_or(ArticlesResponse::default())
+                            //         .articles
+                            //         .map(move |articles| {
+                            //             let (articles, _) = signal(articles.articles);
+                            //             view! {
+                            //                 <ArticlePreviewList username=username articles=articles />
+                            //             }
+                            //         })
+                            // }}
                             <ArticlePreviewList username=username articles=articles />
                         </Transition>
                     </div>
@@ -144,10 +155,7 @@ pub fn HomePage(username: ReadSignal<Option<String>>) -> impl IntoView {
                             children=move |x| {
                                 let active = x == pagination.get().get_page();
                                 view! {
-                                    <li class=move || match active {
-                                        true => "page-item active",
-                                        false => "page-item",
-                                    }>
+                                    <li class="page-item" class:active=move || active>
                                         <button
                                             class="page-link"
                                             on:click=move |_| {
@@ -180,10 +188,9 @@ fn TagList() -> impl IntoView {
     Effect::new(move || {
         let tags_res_opt = tags_res.get();
         if let Some(tags_res) = tags_res_opt.as_deref() {
+            set_tags.set(tags_res.tags.clone());
+        } else {
             set_tags.set(vec![]);
-            tags_res.tags.iter().for_each(|x| {
-                set_tags.update(|a| a.push(x.clone()));
-            });
         }
     });
 
