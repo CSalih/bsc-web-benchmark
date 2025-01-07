@@ -1,14 +1,13 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug)]
-pub struct Tag(String);
+pub struct Tag;
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct TagsResponse {
     pub tags: Vec<String>,
 }
-
 
 impl Tag {
     pub async fn load_tags() -> TagsResponse {

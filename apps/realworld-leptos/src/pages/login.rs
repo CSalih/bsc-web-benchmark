@@ -1,13 +1,13 @@
+use crate::auth::{LoginAction, LoginCommand, LoginMessages};
 use leptos::prelude::*;
 use leptos_meta::*;
 use leptos_router::*;
 use log::error;
-use crate::auth::{LoginCommand, LoginMessages, LoginAction};
 
 #[component]
 pub fn Login(login: LoginAction) -> impl IntoView {
     let (username, set_username) = signal(String::from(""));
-    let (password, set_password) =signal(String::from(""));
+    let (password, set_password) = signal(String::from(""));
     let result_of_call = login.value();
 
     let error = move || {

@@ -2,7 +2,7 @@ use crate::auth::*;
 use leptos::prelude::*;
 
 #[component]
-pub(crate) fn NavItems(logout: LogoutAction) -> impl IntoView {
+pub fn Navbar(logout: LogoutAction) -> impl IntoView {
     let auth_context = expect_context::<AuthContext>();
 
     let profile_label = move || auth_context.username.get().unwrap_or_default();
@@ -47,7 +47,13 @@ pub(crate) fn NavItems(logout: LogoutAction) -> impl IntoView {
                 </a>
             </li>
             <li class="nav-item">
-                <button class="nav-link" style="background: none; border: none;" on:click=move |_| { logout.dispatch(()); }>
+                <button
+                    class="nav-link"
+                    style="background: none; border: none;"
+                    on:click=move |_| {
+                        logout.dispatch(());
+                    }
+                >
                     "Logout"
                 </button>
             </li>
