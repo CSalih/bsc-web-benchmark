@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use leptos_meta::*;
 use leptos_router::*;
 use log::error;
-use crate::auth::{SignupAction, SignupResponse, SignupSignal, validate_signup};
+use crate::auth::{SignupCommand, SignupResponse, SignupSignal, validate_signup};
 
 #[component]
 pub fn SignupPage(signup: SignupSignal) -> impl IntoView {
@@ -12,13 +12,16 @@ pub fn SignupPage(signup: SignupSignal) -> impl IntoView {
         result_of_call.with(|msg| {
             msg.as_ref()
                 .map(|inner| match inner {
+                    Ok(SignupResponse::Success) => {
+                        let navigate = hooks::use_navigate();
+                        navigate("/login", NavigateOptions::default());
+
+                        "Done".into()
+                    },
                     Ok(SignupResponse::ValidationError(x)) => format!("Problem while validating: {x}"),
                     Ok(SignupResponse::CreateUserError(x)) => {
                         format!("Problem while creating user: {x}")
-                    }
-                    Ok(SignupResponse::Success) => {
-                        "Done".into()
-                    }
+                    },
                     Err(x) => {
                         "There was a problem, try again later".into()
                     }
@@ -39,18 +42,12 @@ pub fn SignupPage(signup: SignupSignal) -> impl IntoView {
 
                         <p class="error-messages text-xs-center">{error}</p>
 
-                        <form on:submit=move |ev| {
-                            let Ok(data) = SignupAction::from_event(&ev) else {
-                                return ev.prevent_default();
+                        <form on:submit=move |e| {
+                            e.prevent_default();
+
+                            if let Ok(data) = SignupCommand::from_event(&e) {
+                                signup.dispatch(data);
                             };
-                            if let Err(x) = validate_signup(
-                                data.username,
-                                data.email,
-                                data.password,
-                            ) {
-                                result_of_call.set(Some(Ok(SignupResponse::ValidationError(x))));
-                                return ev.prevent_default();
-                            }
                         }>
                             <fieldset class="form-group">
                                 <input
@@ -79,7 +76,7 @@ pub fn SignupPage(signup: SignupSignal) -> impl IntoView {
                                     required=true
                                 />
                             </fieldset>
-                            <button class="btn btn-lg btn-primary pull-xs-right">"Sign up"</button>
+                            <button type="submit" class="btn btn-lg btn-primary pull-xs-right">"Sign up"</button>
                         </form>
                     </div>
                 </div>

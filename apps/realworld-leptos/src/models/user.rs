@@ -54,8 +54,7 @@ impl User {
     }
 
     fn validate_email(email: &str) -> bool {
-        todo!("Implement email validation");
-        // crate::emailRegex(email)
+        email.contains("@") && email.contains(".")
     }
 
     pub fn set_email(mut self, email: String) -> Result<Self, String> {

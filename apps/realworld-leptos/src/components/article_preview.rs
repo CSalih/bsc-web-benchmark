@@ -1,5 +1,4 @@
 use leptos::prelude::*;
-use leptos_router::*;
 use crate::auth;
 use super::buttons::{fav_action, ButtonFav, ButtonFollow};
 

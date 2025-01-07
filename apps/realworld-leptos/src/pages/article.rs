@@ -7,8 +7,6 @@ use crate::components::ArticleMeta;
 
 #[component]
 pub fn ArticlePage() -> impl IntoView {
-    let auth_context = expect_context::<auth::AuthContext>();
-
     let params = hooks::use_params_map();
     let article = LocalResource::new(
         move || {
@@ -45,8 +43,6 @@ pub fn ArticlePage() -> impl IntoView {
 
 #[component]
 fn ArticleDetail(article: crate::models::Article) -> impl IntoView {
-    let auth_context = expect_context::<auth::AuthContext>();
-
     let article_signal = RwSignal::new(article.clone());
     let tag_list = article.tag_list;
 
@@ -102,7 +98,6 @@ fn CommentSection(
     let comments_action = Action::new(|_| {
         async move { todo!() }
     });
-    let result = comments_action.version();
     let reset_comment = create_rw_signal("");
     let comments = LocalResource::new(
         move || {
@@ -186,7 +181,6 @@ fn Comment(
     let delete_comment_action = Action::new(|_| {
         async move { todo!() }
     });
-    let delete_result = delete_comment_action.value();
     let on_submit = move |e: SubmitEvent| {
         e.prevent_default();
         delete_comment_action.dispatch(());
