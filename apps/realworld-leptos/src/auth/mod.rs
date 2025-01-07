@@ -4,8 +4,22 @@ mod api;
 
 pub use api::*;
 
-
-pub type LogoutSignal = Action<LogoutAction, Result<(), ServerFnError>>;
+pub type LogoutAction = Action<(), bool>;
 pub type LoginSignal = Action<LoginAction, Result<LoginMessages, ServerFnError>>;
 pub type SignupSignal = Action<SignupAction, Result<SignupResponse, ServerFnError>>;
-pub type UsernameSignal = RwSignal<Option<String>>;
+
+
+#[derive(Clone, Debug)]
+pub struct AuthContext {
+    pub is_authenticated: ReadSignal<bool>,
+    pub username: ReadSignal<Option<String>>,
+}
+
+impl AuthContext {
+    pub(crate) fn new(is_authenticated: ReadSignal<bool>, username: ReadSignal<Option<String>>) -> Self {
+        Self {
+            is_authenticated,
+            username,
+        }
+    }
+}
