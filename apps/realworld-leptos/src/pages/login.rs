@@ -2,10 +2,10 @@ use leptos::prelude::*;
 use leptos_meta::*;
 use leptos_router::*;
 use log::error;
-use crate::auth::{LoginAction, LoginMessages, LoginSignal};
+use crate::auth::{LoginCommand, LoginMessages, LoginAction};
 
 #[component]
-pub fn Login(login: LoginSignal) -> impl IntoView {
+pub fn Login(login: LoginAction) -> impl IntoView {
     let (username, set_username) = signal(String::from(""));
     let (password, set_password) =signal(String::from(""));
     let result_of_call = login.value();
@@ -16,6 +16,9 @@ pub fn Login(login: LoginSignal) -> impl IntoView {
                 .map(|inner| match inner {
                     Ok(LoginMessages::Unsuccessful) => "Incorrect user or password",
                     Ok(LoginMessages::Successful) => {
+                        let navigate = hooks::use_navigate();
+                        navigate("/", NavigateOptions::default());
+
                         "Done"
                     }
                     Err(x) => {
@@ -39,7 +42,7 @@ pub fn Login(login: LoginSignal) -> impl IntoView {
                         <form on:submit=move |e| {
                             e.prevent_default();
                             login
-                                .dispatch(LoginAction {
+                                .dispatch(LoginCommand {
                                     username: username.get_untracked(),
                                     password: password.get_untracked(),
                                 });

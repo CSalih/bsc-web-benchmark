@@ -8,6 +8,7 @@ use leptos::prelude::*;
 use leptos_meta::*;
 use leptos_router::components::{Router, Route, FlatRoutes};
 use leptos_router::path;
+use crate::auth::{login_user, validate_signup, SignupCommand, SignupResponse};
 use crate::components::Navbar;
 use crate::pages::*;
 
@@ -36,17 +37,24 @@ pub fn App() -> impl IntoView {
     );
 
     // Actions for login, signup, and logout.
-    let login: auth::LoginSignal = Action::new(move |data: &auth::LoginAction| {
+    let login: auth::LoginAction = Action::new(move |data: &auth::LoginCommand| {
         let data = data.to_owned();
 
         set_is_authenticated.set(true);
-        set_username.set(Some(data.username));
+        set_username.set(Some(data.username.clone()));
 
         // Simulate a successful login.
         async move { Ok(auth::LoginMessages::Successful) }
     });
-    let signup: auth::SignupSignal = Action::new(|_| {
-        async move { todo!() }
+    let signup: auth::SignupSignal = Action::new(|data: &SignupCommand| {
+        let validation = validate_signup(&data);
+
+        async move {
+            if let Err(x) = validation {
+                return Ok(SignupResponse::ValidationError(x));
+            }
+            Ok(SignupResponse::CreateUserError("not implemented yet".into()))
+        }
     });
     let logout: auth::LogoutAction = Action::new(move |_| {
         set_is_authenticated.set(false);
@@ -55,26 +63,12 @@ pub fn App() -> impl IntoView {
         async move { true }
     });
 
-
     // Redirects to the login page after logout.
     Effect::new(move || {
         let data = logout.value();
         if data.get().unwrap_or_default() {
             let navigate = leptos_router::hooks::use_navigate();
             navigate("/login", leptos_router::NavigateOptions::default());
-        }
-    });
-    // Redirects to the home page after login.
-    Effect::new(move || {
-        let data = login.value();
-        if let Some(login) = data.get() {
-            match login {
-                Ok(auth::LoginMessages::Successful) => {
-                    let navigate = leptos_router::hooks::use_navigate();
-                    navigate("/", leptos_router::NavigateOptions::default());
-                },
-                _ => {}
-            }
         }
     });
 
