@@ -1,35 +1,20 @@
+use leptos::ev::SubmitEvent;
 use leptos::prelude::*;
 use leptos_meta::*;
 use leptos_router::*;
-
+use crate::auth;
 use crate::components::ArticleMeta;
 
-#[derive(serde::Deserialize, serde::Serialize, Clone, Default)]
-pub struct ArticleResult {
-    pub(super) article: crate::models::Article,
-    pub(super) logged_user: Option<crate::models::User>,
-}
-
-#[server(GetArticleAction, "/api", "GetJson")]
-pub async fn get_article(slug: String) -> Result<ArticleResult, ServerFnError> {
-    Ok(ArticleResult {
-        article: crate::models::Article::for_article(slug)
-            .await
-            .map_err(|x| {
-                let err = format!("Error while getting user_profile articles: {x:?}");
-                tracing::error!("{err}");
-                ServerFnError::new("Could not retrieve articles, try again later")
-            })?,
-        logged_user: crate::auth::current_user().await.ok(),
-    })
-}
-
 #[component]
-pub fn Article(username: crate::auth::UsernameSignal) -> impl IntoView {
-    let params = use_params_map();
-    let article = create_resource(
-        move || params.get().get("slug").cloned().unwrap_or_default(),
-        |slug| async { get_article(slug).await },
+pub fn ArticlePage() -> impl IntoView {
+    let auth_context = expect_context::<auth::AuthContext>();
+
+    let params = hooks::use_params_map();
+    let article = LocalResource::new(
+        move || {
+            let slug = params.get().get("slug").unwrap_or_default();
+            crate::models::Article::load_article(slug)
+        },
     );
 
     let title = create_rw_signal(String::from("Loading"));
@@ -49,10 +34,8 @@ pub fn Article(username: crate::auth::UsernameSignal) -> impl IntoView {
                     article
                         .get()
                         .map(move |x| {
-                            x.map(move |article_result| {
-                                title.set(article_result.article.slug.to_string());
-                                view! { <ArticlePage username result=article_result /> }
-                            })
+                            title.set(x.article.slug.to_string());
+                            view! { <ArticleDetail article=x.article.clone() /> }
                         })
                 }}
             </ErrorBoundary>
@@ -61,24 +44,25 @@ pub fn Article(username: crate::auth::UsernameSignal) -> impl IntoView {
 }
 
 #[component]
-fn ArticlePage(username: crate::auth::UsernameSignal, result: ArticleResult) -> impl IntoView {
-    let article_signal = create_rw_signal(result.article.clone());
-    let user_signal = create_rw_signal(result.logged_user);
-    let tag_list = result.article.tag_list;
+fn ArticleDetail(article: crate::models::Article) -> impl IntoView {
+    let auth_context = expect_context::<auth::AuthContext>();
+
+    let article_signal = RwSignal::new(article.clone());
+    let tag_list = article.tag_list;
 
     view! {
         <div class="article-page">
             <div class="banner">
                 <div class="container">
-                    <h1>{result.article.title}</h1>
-                    <ArticleMeta username article=article_signal is_preview=false />
+                    <h1>{article.title}</h1>
+                    <ArticleMeta article=article_signal is_preview=false />
                 </div>
             </div>
 
             <div class="container page">
                 <div class="row article-content">
                     <div class="col-md-12">
-                        <p>{result.article.body}</p>
+                        <div inner_html=markdown::to_html(article.body.unwrap_or_default().as_str()) />
                     </div>
                 </div>
 
@@ -96,80 +80,46 @@ fn ArticlePage(username: crate::auth::UsernameSignal, result: ArticleResult) -> 
 
                 <div class="article-actions">
                     <div class="row" style="justify-content: center;">
-                        <ArticleMeta username article=article_signal is_preview=false />
+                        <ArticleMeta article=article_signal is_preview=false />
                     </div>
                 </div>
 
                 <div class="row">
-                    <CommentSection username article=article_signal user=user_signal />
+                    <CommentSection article=article_signal />
                 </div>
             </div>
         </div>
     }
 }
 
-#[server(PostCommentAction, "/api")]
-pub async fn post_comment(slug: String, body: String) -> Result<(), ServerFnError> {
-    let Some(logged_user) = crate::auth::get_username() else {
-        return Err(ServerFnError::ServerError("you must be logged in".into()));
-    };
-
-    crate::models::Comment::insert(slug, logged_user, body)
-        .await
-        .map(|_| ())
-        .map_err(|x| {
-            let err = format!("Error while posting a comment: {x:?}");
-            tracing::error!("{err}");
-            ServerFnError::ServerError("Could not post a comment, try again later".into())
-        })
-}
-
-#[server(GetCommentsAction, "/api", "GetJson")]
-pub async fn get_comments(slug: String) -> Result<Vec<crate::models::Comment>, ServerFnError> {
-    crate::models::Comment::get_all(slug).await.map_err(|x| {
-        let err = format!("Error while posting a comment: {x:?}");
-        tracing::error!("{err}");
-        ServerFnError::ServerError("Could not post a comment, try again later".into())
-    })
-}
-
-#[server(DeleteCommentsAction, "/api")]
-pub async fn delete_comment(id: i32) -> Result<(), ServerFnError> {
-    let Some(logged_user) = crate::auth::get_username() else {
-        return Err(ServerFnError::ServerError("you must be logged in".into()));
-    };
-
-    crate::models::Comment::delete(id, logged_user)
-        .await
-        .map(|_| ())
-        .map_err(|x| {
-            let err = format!("Error while posting a comment: {x:?}");
-            tracing::error!("{err}");
-            ServerFnError::ServerError("Could not post a comment, try again later".into())
-        })
-}
 
 #[component]
 fn CommentSection(
-    username: crate::auth::UsernameSignal,
     article: crate::components::ArticleSignal,
-    user: RwSignal<Option<crate::models::User>>,
 ) -> impl IntoView {
-    let comments_action = create_server_action::<PostCommentAction>();
+    let auth_context = expect_context::<auth::AuthContext>();
+
+    let comments_action = Action::new(|_| {
+        async move { todo!() }
+    });
     let result = comments_action.version();
     let reset_comment = create_rw_signal("");
-    let comments = create_resource(
-        move || (result.get(), article.with(|a| a.slug.to_string())),
-        move |(_, a)| async move {
+    let comments = LocalResource::new(
+        move || {
+            let slug = article.with(|a| a.slug.to_string());
             reset_comment.set("");
-            get_comments(a).await
+            crate::models::Comment::load_comments(slug)
         },
     );
+    let on_submit = move |e: SubmitEvent| {
+        e.prevent_default();
+        comments_action.dispatch(());
+    };
 
     view! {
         <div class="col-xs-12 col-md-8 offset-md-2">
-            <Show when=move || username.with(Option::is_some) fallback=|| ()>
-                <ActionForm action=comments_action class="card comment-form">
+            <Show when=move || auth_context.is_authenticated.get() fallback=|| ()>
+                <form on:submit=on_submit class="card comment-form">
                     <input
                         name="slug"
                         type="hidden"
@@ -185,19 +135,19 @@ fn CommentSection(
                         ></textarea>
                     </div>
                     <div class="card-footer">
-                        <img
-                            src=move || {
-                                user.with(|x| {
-                                    x.as_ref().map(crate::models::User::image).unwrap_or_default()
-                                })
-                            }
-                            class="comment-author-img"
-                        />
+                        // <img
+                        //     src=move || {
+                        //         auth_context.username.with(|x| {
+                        //             x.as_ref().map(crate::models::User::image).unwrap_or_default()
+                        //         })
+                        //     }
+                        //     class="comment-author-img"
+                        // />
                         <button class="btn btn-sm btn-primary" type="submit">
                             "Post Comment"
                         </button>
                     </div>
-                </ActionForm>
+                </form>
             </Show>
             <Suspense fallback=move || view! { <p>"Loading Comments from the article"</p> }>
                 <ErrorBoundary fallback=|_| {
@@ -206,19 +156,17 @@ fn CommentSection(
                     {move || {
                         comments
                             .get()
-                            .map(move |x| {
-                                x.map(move |c| {
-                                    view! {
-                                        <For
-                                            each=move || c.clone().into_iter().enumerate()
-                                            key=|(i, _)| *i
-                                            children=move |(_, comment)| {
-                                                let comment = create_rw_signal(comment);
-                                                view! { <Comment username comment comments /> }
-                                            }
-                                        />
-                                    }
-                                })
+                            .map(move |res| {
+                                view! {
+                                    <For
+                                        each=move || res.comments.clone().into_iter().enumerate()
+                                        key=|(i, _)| *i
+                                        children=move |(_, comment)| {
+                                            let comment = RwSignal::new(comment);
+                                            view! { <Comment comment /> }
+                                        }
+                                    />
+                                }
                             })
                     }}
                 </ErrorBoundary>
@@ -228,22 +176,21 @@ fn CommentSection(
 }
 
 #[component]
-fn Comment<T: 'static + Clone, S: 'static>(
-    username: crate::auth::UsernameSignal,
+fn Comment(
     comment: RwSignal<crate::models::Comment>,
-    comments: Resource<T, S>,
 ) -> impl IntoView {
+    let auth_context = expect_context::<auth::AuthContext>();
+
     let user_link = move || format!("/profile/{}", comment.with(|x| x.username.to_string()));
     let user_image = move || comment.with(|x| x.user_image.clone().unwrap_or_default());
-    let delete_c = create_server_action::<DeleteCommentsAction>();
-    let delete_result = delete_c.value();
-
-    create_effect(move |_| {
-        if let Some(Ok(())) = delete_result.get() {
-            tracing::info!("comment deleted!");
-            comments.refetch();
-        }
+    let delete_comment_action = Action::new(|_| {
+        async move { todo!() }
     });
+    let delete_result = delete_comment_action.value();
+    let on_submit = move |e: SubmitEvent| {
+        e.prevent_default();
+        delete_comment_action.dispatch(());
+    };
 
     view! {
         <div class="card">
@@ -251,29 +198,29 @@ fn Comment<T: 'static + Clone, S: 'static>(
                 <p class="card-text">{move || comment.with(|x| x.body.to_string())}</p>
             </div>
             <div class="card-footer">
-                <A href=user_link class="comment-author">
+                <a href=user_link class="comment-author">
                     <img src=user_image class="comment-author-img" />
-                </A>
+                </a>
                 " "
-                <A href=user_link class="comment-author">
+                <a href=user_link class="comment-author">
                     {move || comment.with(|x| x.username.to_string())}
-                </A>
+                </a>
                 <span class="date-posted">
                     {move || comment.with(|x| x.created_at.to_string())}
                 </span>
                 <Show
                     when=move || {
-                        username.get().unwrap_or_default()
+                        auth_context.username.get().unwrap_or_default()
                             == comment.with(|x| x.username.to_string())
                     }
                     fallback=|| ()
                 >
-                    <ActionForm action=delete_c class="comment-author">
+                    <form on:submit=on_submit class="comment-author">
                         <input type="hidden" name="id" value=move || comment.with(|x| x.id) />
                         <button class="btn btn-sm" type="submit">
                             <i class="ion-trash-b"></i>
                         </button>
-                    </ActionForm>
+                    </form>
                 </Show>
             </div>
         </div>

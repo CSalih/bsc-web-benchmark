@@ -80,18 +80,6 @@ pub async fn login_action(
     }
 }
 
-#[server(LogoutAction, "/api")]
-pub async fn logout_action() -> Result<(), ServerFnError> {
-    let response_options = use_context::<leptos_axum::ResponseOptions>().unwrap();
-    response_options.insert_header(
-        axum::http::header::SET_COOKIE,
-        axum::http::HeaderValue::from_str(crate::auth::REMOVE_COOKIE)
-            .expect("header value couldn't be set"),
-    );
-    leptos_axum::redirect("/login");
-    Ok(())
-}
-
 #[server(CurrentUserAction, "/api")]
 pub async fn current_user() -> Result<crate::models::User, ServerFnError> {
     let Some(logged_user) = super::get_username() else {

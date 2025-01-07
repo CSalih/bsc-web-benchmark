@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_router::*;
-
+use crate::auth;
 use super::buttons::{fav_action, ButtonFav, ButtonFollow};
 
 pub type ArticleSignal = RwSignal<crate::models::Article>;
@@ -9,9 +9,10 @@ type ArticlesType<S, T = Result<Vec<crate::models::Article>, ServerFnError>> = R
 
 #[component]
 pub fn ArticlePreviewList(
-    username: ReadSignal<Option<String>>,
     articles: ReadSignal<Vec<crate::models::Article>>,
 ) -> impl IntoView {
+    let auth_context = expect_context::<auth::AuthContext>();
+
     view! {
         <Suspense fallback=move || view! { <p>"Loading Articles"</p> }>
             <ErrorBoundary fallback=|_| {
@@ -22,7 +23,7 @@ pub fn ArticlePreviewList(
                     key=|(article)| article.slug.clone()
                     children=move |article: crate::models::Article| {
                         let article = RwSignal::new(article);
-                        view! { <ArticlePreview article=article username=username /> }
+                        view! { <ArticlePreview article=article /> }
                     }
                 />
             </ErrorBoundary>
@@ -31,10 +32,10 @@ pub fn ArticlePreviewList(
 }
 
 #[component]
-fn ArticlePreview(username: ReadSignal<Option<String>>, article: ArticleSignal) -> impl IntoView {
+fn ArticlePreview(article: ArticleSignal) -> impl IntoView {
     view! {
         <div class="article-preview">
-            <ArticleMeta username=username article=article is_preview=true />
+            <ArticleMeta article=article is_preview=true />
             <a
                 href=move || format!("/article/{}", article.with(|x| x.slug.clone()))
                 class="preview-link"
@@ -62,10 +63,11 @@ fn ArticlePreview(username: ReadSignal<Option<String>>, article: ArticleSignal) 
 
 #[component]
 pub fn ArticleMeta(
-    username: ReadSignal<Option<String>>,
     article: ArticleSignal,
     is_preview: bool,
 ) -> impl IntoView {
+    let auth_context = expect_context::<auth::AuthContext>();
+
     let editor_ref = move || format!("/editor/{}", article.with(|x| x.slug.to_string()));
     let profile_ref = move || {
         format!(
@@ -94,7 +96,7 @@ pub fn ArticleMeta(
                     view! {
                         <Show
                             when=move || {
-                                username.get().unwrap_or_default()
+                                auth_context.username.get().unwrap_or_default()
                                     == article.with(|x| x.author.username.to_string())
                             }
                             fallback=move || {
@@ -104,11 +106,11 @@ pub fn ArticleMeta(
                                 );
                                 view! {
                                     <Show
-                                        when=move || username.with(Option::is_some)
+                                        when=move || auth_context.is_authenticated.get()
                                         fallback=|| ()
                                     >
-                                        <ButtonFav username=username article=article />
-                                        <ButtonFollow logged_user=username author following />
+                                        <ButtonFav article=article />
+                                        <ButtonFollow author following />
                                     </Show>
                                 }
                             }
@@ -132,7 +134,7 @@ pub fn ArticleMeta(
                     }
                 }
             >
-                <ButtonFav username=username article=article />
+                <ButtonFav article=article />
             </Show>
         </div>
     }

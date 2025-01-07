@@ -18,6 +18,12 @@ pub struct Article {
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct ArticleResponse {
+    pub article: Article,
+}
+
+#[derive(Serialize, Deserialize, Clone, Default, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct ArticlesResponse {
     pub articles: Vec<Article>,
     pub articles_count: i64,
@@ -44,6 +50,19 @@ impl Article {
             .await
             .unwrap()
             .json::<ArticlesResponse>()
+            .await
+            .unwrap()
+    }
+
+    pub async fn load_article(slug: String) -> ArticleResponse {
+        let url = format!("http://localhost:8080/api/articles/{slug}");
+
+        reqwest::Client::new()
+            .get(url)
+            .send()
+            .await
+            .unwrap()
+            .json::<ArticleResponse>()
             .await
             .unwrap()
     }

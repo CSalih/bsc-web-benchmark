@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 use leptos_router::*;
 use log::error;
+use crate::auth;
 use crate::components::ArticleSignal;
 
 pub async fn follow_action(other_user: String) -> Result<bool, ServerFnError> {
@@ -28,10 +29,11 @@ pub async fn fav_action(slug: String) -> Result<bool, ServerFnError> {
 
 #[component]
 pub fn ButtonFollow(
-    logged_user: ReadSignal<Option<String>>,
     author: ReadSignal<String>,
     following: bool,
 ) -> impl IntoView {
+    let auth_context = expect_context::<auth::AuthContext>();
+
     // let follow = create_server_action::<FollowAction>();
     let follow = Action::new(|username: &String| follow_action(username.to_string()));
     let result_call = follow.value();
@@ -50,7 +52,7 @@ pub fn ButtonFollow(
     };
 
     view! {
-        <Show when=move || logged_user.get().unwrap_or_default() != author.get() fallback=|| ()>
+        <Show when=move || auth_context.username.get().unwrap_or_default() != author.get() fallback=|| ()>
             <form class="inline pull-xs-right">
                 <input type="hidden" name="other_user" value=move || author.get() />
                 <button type="submit" class="btn btn-sm btn-outline-secondary">
@@ -75,7 +77,6 @@ pub fn ButtonFollow(
 
 #[component]
 pub fn ButtonFav(
-    username: ReadSignal<Option<String>>,
     article: ArticleSignal,
 ) -> impl IntoView {
     let make_fav = Action::new(|slug: &String| fav_action(slug.to_string()));
