@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use crate::models::{Article, ArticleResponse};
 
 #[derive(Debug, serde::Deserialize, serde::Serialize, Clone)]
 pub struct Comment {

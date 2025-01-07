@@ -1,5 +1,3 @@
-use leptos::prelude::*;
-
 #[derive(Debug, PartialEq, Clone, Hash, PartialOrd, Eq)]
 pub struct Pagination {
     tag: Option<String>,

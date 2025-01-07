@@ -1,22 +1,7 @@
-use leptos::prelude::*;
 use crate::auth;
-use crate::components::{ArticlePreviewList};
+use crate::components::ArticlePreviewList;
 use crate::models::{Article, Pagination, Tag};
-
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
-struct GetArticlesQueryKey(u32);
-
-async fn get_tags() -> Result<Vec<String>, ServerFnError> {
-    // sqlx::query!("SELECT DISTINCT tag FROM ArticleTags")
-    //     .map(|x| x.tag)
-    //     .fetch_all(crate::database::get_db())
-    //     .await
-    //     .map_err(|x| {
-    //         tracing::error!("problem while fetching tags: {x:?}");
-    //         ServerFnError::ServerError("Problem while fetching tags".into())
-    //     })
-    Ok(vec![])
-}
+use leptos::prelude::*;
 
 /// Renders the home page of your application.
 #[component]
@@ -26,9 +11,7 @@ pub fn HomePage() -> impl IntoView {
     let (articles, set_articles) = signal::<Vec<Article>>(vec![]);
     let (pagination, set_pagination) = signal(Pagination::default());
 
-    let articles_res = LocalResource::new(
-        move || Article::load_articles(pagination.get())
-    );
+    let articles_res = LocalResource::new(move || Article::load_articles(pagination.get()));
 
     let your_feed_class = move || {
         format!(
@@ -45,9 +28,13 @@ pub fn HomePage() -> impl IntoView {
     let pages = move || {
         let articles_res_opt = articles_res.get();
         if let Some(articles_res) = articles_res_opt.as_deref() {
-            let max_page = (articles_res.articles_count as f64 / pagination.get().get_amount() as f64).ceil() as u32;
+            let max_page = (articles_res.articles_count as f64
+                / pagination.get().get_amount() as f64)
+                .ceil() as u32;
             (1..=max_page).collect::<Vec<u32>>()
-        } else { vec![] }
+        } else {
+            vec![]
+        }
     };
 
     // TODO: This is not the right way.
@@ -113,16 +100,16 @@ pub fn HomePage() -> impl IntoView {
 
                         <Transition fallback=|| view! { <p>"Loading articles"</p> }>
                             // {move || {
-                            //     articles_res
-                            //         .get()
-                            //         .unwrap_or(ArticlesResponse::default())
-                            //         .articles
-                            //         .map(move |articles| {
-                            //             let (articles, _) = signal(articles.articles);
-                            //             view! {
-                            //                 <ArticlePreviewList username=username articles=articles />
-                            //             }
-                            //         })
+                            // articles_res
+                            // .get()
+                            // .unwrap_or(ArticlesResponse::default())
+                            // .articles
+                            // .map(move |articles| {
+                            // let (articles, _) = signal(articles.articles);
+                            // view! {
+                            // <ArticlePreviewList username=username articles=articles />
+                            // }
+                            // })
                             // }}
                             <ArticlePreviewList articles=articles />
                         </Transition>
@@ -171,7 +158,6 @@ fn TagList() -> impl IntoView {
 
     let tags_fetcher = move || Tag::load_tags();
     let tags_res = LocalResource::new(tags_fetcher);
-
 
     // TODO: This is not the right way.
     Effect::new(move || {

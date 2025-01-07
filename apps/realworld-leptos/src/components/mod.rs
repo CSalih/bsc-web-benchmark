@@ -1,7 +1,7 @@
 mod article_preview;
 mod buttons;
-mod navitems;
+mod navbar;
 
 pub(crate) use article_preview::{ArticleMeta, ArticlePreviewList, ArticleSignal};
-pub(crate) use buttons::ButtonFollow;
-pub(crate) use navitems::NavItems as Navbar;
+// pub(crate) use buttons::ButtonFollow;
+pub(crate) use navbar::Navbar;

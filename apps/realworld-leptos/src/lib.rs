@@ -1,28 +1,16 @@
 // Modules
-mod components;
-mod pages;
-mod models;
 mod auth;
+mod components;
+mod models;
+mod pages;
 
-use leptos::prelude::*;
-use leptos_meta::*;
-use leptos_router::components::{Router, Route, FlatRoutes};
-use leptos_router::path;
-use crate::auth::{login_user, validate_signup, SignupCommand, SignupResponse};
+use crate::auth::{validate_signup, SignupCommand, SignupResponse};
 use crate::components::Navbar;
 use crate::pages::*;
-
-
-async fn load_data() -> String {
-    let res = reqwest::Client::new()
-        .get("https://api.github.com/repos/rustwasm/wasm-bindgen/branches/master")
-        .header("Accept", "application/vnd.github.v3+json")
-        .send()
-        .await
-        .unwrap();
-
-    res.text().await.unwrap()
-}
+use leptos::prelude::*;
+use leptos_meta::*;
+use leptos_router::components::{FlatRoutes, Route, Router};
+use leptos_router::path;
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -32,9 +20,7 @@ pub fn App() -> impl IntoView {
     // Provides context that manages the authentication state.
     let (is_authenticated, set_is_authenticated) = signal(false);
     let (username, set_username) = signal::<Option<String>>(None);
-    provide_context::<auth::AuthContext>(
-        auth::AuthContext::new(is_authenticated, username)
-    );
+    provide_context::<auth::AuthContext>(auth::AuthContext::new(is_authenticated, username));
 
     // Actions for login, signup, and logout.
     let login: auth::LoginAction = Action::new(move |data: &auth::LoginCommand| {
@@ -53,7 +39,9 @@ pub fn App() -> impl IntoView {
             if let Err(x) = validation {
                 return Ok(SignupResponse::ValidationError(x));
             }
-            Ok(SignupResponse::CreateUserError("not implemented yet".into()))
+            Ok(SignupResponse::CreateUserError(
+                "not implemented yet".into(),
+            ))
         }
     });
     let logout: auth::LogoutAction = Action::new(move |_| {

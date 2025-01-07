@@ -34,7 +34,6 @@ pub fn validate_signup(signup_command: &SignupCommand) -> Result<crate::models::
         .set_email(signup_command.email.clone())
 }
 
-
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct LoginResponse {
     pub user: crate::models::User,
@@ -46,7 +45,6 @@ pub async fn login_user(login_command: &LoginCommand) -> LoginResponse {
     let mut json_body = std::collections::HashMap::new();
     json_body.insert("user", login_command);
 
-
     reqwest::Client::new()
         .post(url)
         .json(&json_body)
@@ -57,4 +55,3 @@ pub async fn login_user(login_command: &LoginCommand) -> LoginResponse {
         .await
         .unwrap()
 }
-
