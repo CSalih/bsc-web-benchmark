@@ -4,7 +4,7 @@ use log::error;
 use crate::auth;
 use crate::components::ArticleSignal;
 
-pub async fn follow_action(other_user: String) -> Result<bool, ServerFnError> {
+pub async fn follow_action(_other_user: String) -> Result<bool, ServerFnError> {
     // let Some(username) = crate::auth::get_username() else {
     //     return Err(ServerFnError::ServerError("You need to be authenticated".into()));
     // };
@@ -15,7 +15,7 @@ pub async fn follow_action(other_user: String) -> Result<bool, ServerFnError> {
     Ok(false)
 }
 
-pub async fn fav_action(slug: String) -> Result<bool, ServerFnError> {
+pub async fn fav_action(_slug: String) -> Result<bool, ServerFnError> {
     // let Some(username) = crate::auth::get_username() else {
     //     return Err(ServerFnError::ServerError("You need to be authenticated".into()));
     // };

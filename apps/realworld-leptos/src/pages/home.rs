@@ -30,21 +30,6 @@ pub fn HomePage() -> impl IntoView {
         move || Article::load_articles(pagination.get())
     );
 
-
-    let your_feed_href = move || {
-        if !auth_context.is_authenticated.get() {
-            None
-        }
-        else {
-            Some(
-                pagination
-                    .get()
-                    .reset_page()
-                    .set_my_feed(true)
-                    .to_string()
-            )
-        }
-    };
     let your_feed_class = move || {
         format!(
             "nav-link {}",

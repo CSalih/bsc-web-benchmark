@@ -5,8 +5,8 @@ mod api;
 pub use api::*;
 
 pub type LogoutAction = Action<(), bool>;
-pub type LoginSignal = Action<LoginAction, Result<LoginMessages, ServerFnError>>;
-pub type SignupSignal = Action<SignupAction, Result<SignupResponse, ServerFnError>>;
+pub type LoginAction = Action<LoginCommand, Result<LoginMessages, ServerFnError>>;
+pub type SignupSignal = Action<SignupCommand, Result<SignupResponse, ServerFnError>>;
 
 
 #[derive(Clone, Debug)]
