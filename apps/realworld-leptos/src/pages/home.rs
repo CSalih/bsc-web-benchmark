@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+use crate::auth;
 use crate::components::{ArticlePreviewList};
 use crate::models::{Article, Pagination, Tag};
 
@@ -19,16 +20,19 @@ async fn get_tags() -> Result<Vec<String>, ServerFnError> {
 
 /// Renders the home page of your application.
 #[component]
-pub fn HomePage(username: ReadSignal<Option<String>>) -> impl IntoView {
+pub fn HomePage() -> impl IntoView {
+    let auth_context = expect_context::<auth::AuthContext>();
+
     let (articles, set_articles) = signal::<Vec<Article>>(vec![]);
     let (pagination, set_pagination) = signal(Pagination::default());
 
-    let articles_fetcher = move || Article::load_articles(pagination.get());
-    let articles_res = LocalResource::new(articles_fetcher);
+    let articles_res = LocalResource::new(
+        move || Article::load_articles(pagination.get())
+    );
 
-    let is_authenticated = move || username.get().is_some();
+
     let your_feed_href = move || {
-        if !is_authenticated() {
+        if !auth_context.is_authenticated.get() {
             None
         }
         else {
@@ -44,7 +48,7 @@ pub fn HomePage(username: ReadSignal<Option<String>>) -> impl IntoView {
     let your_feed_class = move || {
         format!(
             "nav-link {}",
-            if username.with(Option::is_none) {
+            if auth_context.username.with(Option::is_none) {
                 "disabled"
             } else if !pagination.get().get_my_feed() {
                 "active"
@@ -85,7 +89,7 @@ pub fn HomePage(username: ReadSignal<Option<String>>) -> impl IntoView {
                     <div class="col-md-9">
                         <div class="feed-toggle">
                             <ul class="nav nav-pills outline-active">
-                                <Show when=move || { is_authenticated() }>
+                                <Show when=move || { auth_context.is_authenticated.get() }>
                                     <li class="nav-item">
                                         <button
                                             class=your_feed_class
@@ -135,7 +139,7 @@ pub fn HomePage(username: ReadSignal<Option<String>>) -> impl IntoView {
                             //             }
                             //         })
                             // }}
-                            <ArticlePreviewList username=username articles=articles />
+                            <ArticlePreviewList articles=articles />
                         </Transition>
                     </div>
 

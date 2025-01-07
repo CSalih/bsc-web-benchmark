@@ -1,4 +1,4 @@
-// mod article;
+mod article;
 // mod editor;
 mod home;
 mod login;
@@ -7,7 +7,7 @@ mod login;
 mod signup;
 // mod reset_password;
 
-// pub use article::*;
+pub use article::ArticlePage;
 // pub use editor::*;
 pub use home::*;
 pub use login::*;
