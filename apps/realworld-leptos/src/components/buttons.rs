@@ -1,37 +1,18 @@
-use leptos::prelude::*;
-use leptos_router::*;
-use log::error;
 use crate::auth;
 use crate::components::ArticleSignal;
+use leptos::prelude::*;
+use log::error;
 
 pub async fn follow_action(_other_user: String) -> Result<bool, ServerFnError> {
-    // let Some(username) = crate::auth::get_username() else {
-    //     return Err(ServerFnError::ServerError("You need to be authenticated".into()));
-    // };
-    // toggle_follow(username, other_user).await.map_err(|x| {
-    //     tracing::error!("problem while updating the database: {x:?}");
-    //     ServerFnError::ServerError("error while updating the follow".into())
-    // })
     Ok(false)
 }
 
 pub async fn fav_action(_slug: String) -> Result<bool, ServerFnError> {
-    // let Some(username) = crate::auth::get_username() else {
-    //     return Err(ServerFnError::ServerError("You need to be authenticated".into()));
-    // };
-    // toggle_fav(slug, username).await.map_err(|x| {
-    //     tracing::error!("problem while updating the database: {x:?}");
-    //     ServerFnError::ServerError("error while updating the follow".into())
-    // })
     Ok(false)
 }
 
-
 #[component]
-pub fn ButtonFollow(
-    author: ReadSignal<String>,
-    following: bool,
-) -> impl IntoView {
+pub fn ButtonFollow(author: ReadSignal<String>, following: bool) -> impl IntoView {
     let auth_context = expect_context::<auth::AuthContext>();
 
     // let follow = create_server_action::<FollowAction>();
@@ -52,7 +33,10 @@ pub fn ButtonFollow(
     };
 
     view! {
-        <Show when=move || auth_context.username.get().unwrap_or_default() != author.get() fallback=|| ()>
+        <Show
+            when=move || auth_context.username.get().unwrap_or_default() != author.get()
+            fallback=|| ()
+        >
             <form class="inline pull-xs-right">
                 <input type="hidden" name="other_user" value=move || author.get() />
                 <button type="submit" class="btn btn-sm btn-outline-secondary">
@@ -76,9 +60,7 @@ pub fn ButtonFollow(
 }
 
 #[component]
-pub fn ButtonFav(
-    article: ArticleSignal,
-) -> impl IntoView {
+pub fn ButtonFav(article: ArticleSignal) -> impl IntoView {
     let make_fav = Action::new(|slug: &String| fav_action(slug.to_string()));
     let result_make_fav = make_fav.value();
     let fav_count = move || {

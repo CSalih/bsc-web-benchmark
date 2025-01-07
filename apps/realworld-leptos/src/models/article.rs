@@ -34,7 +34,10 @@ impl Article {
         let url = "http://localhost:8080/api/articles";
         let mut query = vec![
             ("limit", pagination.get_amount().to_string()),
-            ("offset", ((pagination.get_page() - 1) * pagination.get_amount()).to_string()),
+            (
+                "offset",
+                ((pagination.get_page() - 1) * pagination.get_amount()).to_string(),
+            ),
         ];
         if !pagination.get_tag().is_empty() {
             query.push(("tag", pagination.get_tag().into()));

@@ -7,9 +7,6 @@ edition = "2021"
 name = "realworld-leptos"
 path = "src/main.rs"
 
-[build]
-target = "wasm32-unknown-unknown"
-
 [profile.wasm-release]
 inherits = "release"
 opt-level = 'z'

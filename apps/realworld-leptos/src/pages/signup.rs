@@ -1,8 +1,6 @@
+use crate::auth::{SignupCommand, SignupResponse, SignupSignal};
 use leptos::prelude::*;
-use leptos_meta::*;
 use leptos_router::*;
-use log::error;
-use crate::auth::{SignupCommand, SignupResponse, SignupSignal, validate_signup};
 
 #[component]
 pub fn SignupPage(signup: SignupSignal) -> impl IntoView {
@@ -17,14 +15,14 @@ pub fn SignupPage(signup: SignupSignal) -> impl IntoView {
                         navigate("/login", NavigateOptions::default());
 
                         "Done".into()
-                    },
-                    Ok(SignupResponse::ValidationError(x)) => format!("Problem while validating: {x}"),
+                    }
+                    Ok(SignupResponse::ValidationError(x)) => {
+                        format!("Problem while validating: {x}")
+                    }
                     Ok(SignupResponse::CreateUserError(x)) => {
                         format!("Problem while creating user: {x}")
-                    },
-                    Err(x) => {
-                        "There was a problem, try again later".into()
                     }
+                    Err(_) => "There was a problem, try again later".into(),
                 })
                 .unwrap_or_default()
         })
@@ -44,10 +42,9 @@ pub fn SignupPage(signup: SignupSignal) -> impl IntoView {
 
                         <form on:submit=move |e| {
                             e.prevent_default();
-
                             if let Ok(data) = SignupCommand::from_event(&e) {
                                 signup.dispatch(data);
-                            };
+                            }
                         }>
                             <fieldset class="form-group">
                                 <input
@@ -76,7 +73,9 @@ pub fn SignupPage(signup: SignupSignal) -> impl IntoView {
                                     required=true
                                 />
                             </fieldset>
-                            <button type="submit" class="btn btn-lg btn-primary pull-xs-right">"Sign up"</button>
+                            <button type="submit" class="btn btn-lg btn-primary pull-xs-right">
+                                "Sign up"
+                            </button>
                         </form>
                     </div>
                 </div>

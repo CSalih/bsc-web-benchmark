@@ -1,21 +1,19 @@
+use crate::auth;
+use crate::components::ArticleMeta;
 use leptos::ev::SubmitEvent;
 use leptos::prelude::*;
 use leptos_meta::*;
 use leptos_router::*;
-use crate::auth;
-use crate::components::ArticleMeta;
 
 #[component]
 pub fn ArticlePage() -> impl IntoView {
     let params = hooks::use_params_map();
-    let article = LocalResource::new(
-        move || {
-            let slug = params.get().get("slug").unwrap_or_default();
-            crate::models::Article::load_article(slug)
-        },
-    );
+    let article = LocalResource::new(move || {
+        let slug = params.get().get("slug").unwrap_or_default();
+        crate::models::Article::load_article(slug)
+    });
 
-    let title = create_rw_signal(String::from("Loading"));
+    let title = RwSignal::new(String::from("Loading"));
 
     view! {
         <Title text=move || title.get() />
@@ -58,7 +56,9 @@ fn ArticleDetail(article: crate::models::Article) -> impl IntoView {
             <div class="container page">
                 <div class="row article-content">
                     <div class="col-md-12">
-                        <div inner_html=markdown::to_html(article.body.unwrap_or_default().as_str()) />
+                        <div inner_html=markdown::to_html(
+                            article.body.unwrap_or_default().as_str(),
+                        ) />
                     </div>
                 </div>
 
@@ -88,24 +88,17 @@ fn ArticleDetail(article: crate::models::Article) -> impl IntoView {
     }
 }
 
-
 #[component]
-fn CommentSection(
-    article: crate::components::ArticleSignal,
-) -> impl IntoView {
+fn CommentSection(article: crate::components::ArticleSignal) -> impl IntoView {
     let auth_context = expect_context::<auth::AuthContext>();
 
-    let comments_action = Action::new(|_| {
-        async move { todo!() }
+    let comments_action = Action::new(|_| async move { todo!() });
+    let reset_comment = RwSignal::new("");
+    let comments = LocalResource::new(move || {
+        let slug = article.with(|a| a.slug.to_string());
+        reset_comment.set("");
+        crate::models::Comment::load_comments(slug)
     });
-    let reset_comment = create_rw_signal("");
-    let comments = LocalResource::new(
-        move || {
-            let slug = article.with(|a| a.slug.to_string());
-            reset_comment.set("");
-            crate::models::Comment::load_comments(slug)
-        },
-    );
     let on_submit = move |e: SubmitEvent| {
         e.prevent_default();
         comments_action.dispatch(());
@@ -131,12 +124,12 @@ fn CommentSection(
                     </div>
                     <div class="card-footer">
                         // <img
-                        //     src=move || {
-                        //         auth_context.username.with(|x| {
-                        //             x.as_ref().map(crate::models::User::image).unwrap_or_default()
-                        //         })
-                        //     }
-                        //     class="comment-author-img"
+                        // src=move || {
+                        // auth_context.username.with(|x| {
+                        // x.as_ref().map(crate::models::User::image).unwrap_or_default()
+                        // })
+                        // }
+                        // class="comment-author-img"
                         // />
                         <button class="btn btn-sm btn-primary" type="submit">
                             "Post Comment"
@@ -171,16 +164,12 @@ fn CommentSection(
 }
 
 #[component]
-fn Comment(
-    comment: RwSignal<crate::models::Comment>,
-) -> impl IntoView {
+fn Comment(comment: RwSignal<crate::models::Comment>) -> impl IntoView {
     let auth_context = expect_context::<auth::AuthContext>();
 
     let user_link = move || format!("/profile/{}", comment.with(|x| x.username.to_string()));
     let user_image = move || comment.with(|x| x.user_image.clone().unwrap_or_default());
-    let delete_comment_action = Action::new(|_| {
-        async move { todo!() }
-    });
+    let delete_comment_action = Action::new(|_| async move { todo!() });
     let on_submit = move |e: SubmitEvent| {
         e.prevent_default();
         delete_comment_action.dispatch(());
