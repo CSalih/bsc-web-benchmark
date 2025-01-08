@@ -1,7 +1,0 @@
-.angular/
-.nx/
-dist/
-node_modules/
-
-.gitignore
-README.md
