@@ -8,9 +8,7 @@ use leptos::prelude::*;
 pub fn HomePage() -> impl IntoView {
     let auth_context = expect_context::<auth::AuthContext>();
 
-    let (articles, set_articles) = signal::<Vec<Article>>(vec![]);
     let (pagination, set_pagination) = signal(Pagination::default());
-
     let articles_res = LocalResource::new(move || Article::load_articles(pagination.get()));
 
     let your_feed_class = move || {
@@ -36,16 +34,6 @@ pub fn HomePage() -> impl IntoView {
             vec![]
         }
     };
-
-    // TODO: This is not the right way.
-    Effect::new(move || {
-        let articles_res_opt = articles_res.get();
-        if let Some(articles_res_ref) = articles_res_opt.as_deref() {
-            set_articles.set(articles_res_ref.articles.clone());
-        } else {
-            set_articles.set(vec![]);
-        }
-    });
 
     view! {
         <div class="home-page">
@@ -98,20 +86,18 @@ pub fn HomePage() -> impl IntoView {
                             </ul>
                         </div>
 
-                        <Transition fallback=|| view! { <p>"Loading articles"</p> }>
-                            // {move || {
-                            // articles_res
-                            // .get()
-                            // .unwrap_or(ArticlesResponse::default())
-                            // .articles
-                            // .map(move |articles| {
-                            // let (articles, _) = signal(articles.articles);
-                            // view! {
-                            // <ArticlePreviewList username=username articles=articles />
-                            // }
-                            // })
-                            // }}
-                            <ArticlePreviewList articles=articles />
+                        <Transition fallback=|| {
+                            view! { <p>"Loading articles"</p> }
+                        }>
+                            {move || {
+                                articles_res
+                                    .get()
+                                    .as_deref()
+                                    .map(|articles_res| {
+                                        let (articles, _) = signal(articles_res.articles.clone());
+                                        view! { <ArticlePreviewList articles=articles /> }
+                                    })
+                            }}
                         </Transition>
                     </div>
 
@@ -154,20 +140,7 @@ pub fn HomePage() -> impl IntoView {
 
 #[component]
 fn TagList() -> impl IntoView {
-    let (tags, set_tags) = signal::<Vec<String>>(vec![]);
-
-    let tags_fetcher = move || Tag::load_tags();
-    let tags_res = LocalResource::new(tags_fetcher);
-
-    // TODO: This is not the right way.
-    Effect::new(move || {
-        let tags_res_opt = tags_res.get();
-        if let Some(tags_res) = tags_res_opt.as_deref() {
-            set_tags.set(tags_res.tags.clone());
-        } else {
-            set_tags.set(vec![]);
-        }
-    });
+    let tags_res = LocalResource::new(move || Tag::load_tags());
 
     view! {
         <div class="tag-list">
@@ -175,17 +148,27 @@ fn TagList() -> impl IntoView {
                 <ErrorBoundary fallback=|_| {
                     view! { <p class="error-messages text-xs-center">"Something went wrong."</p> }
                 }>
-                    <For
-                        each=move || tags.get().into_iter().enumerate()
-                        key=|(i, _)| *i
-                        children=move |(_, t): (usize, String)| {
-                            view! {
-                                <a class="tag-pill tag-default" href="">
-                                    {t}
-                                </a>
-                            }
-                        }
-                    />
+                    {move || {
+                        tags_res
+                            .get()
+                            .map(move |tags_res| {
+                                view! {
+                                    <For
+                                        each=move || {
+                                            (&tags_res.tags).clone().into_iter().enumerate()
+                                        }
+                                        key=|(i, _)| *i
+                                        children=move |(_, tag): (usize, String)| {
+                                            view! {
+                                                <a class="tag-pill tag-default" href="">
+                                                    {tag}
+                                                </a>
+                                            }
+                                        }
+                                    />
+                                }
+                            })
+                    }}
                 </ErrorBoundary>
             </Suspense>
         </div>
