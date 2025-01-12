@@ -138,7 +138,7 @@ const stopWebServer = (name) => {
   });
 };
 
-const testDate = new Date().toISOString();
+const testDate = new Date().valueOf();
 const program = new Command();
 program
   .name("benchmark")
@@ -175,7 +175,8 @@ program
 
       // backup results
       console.log(`Backing up results for ${app}`);
-      const backupDir = path.join(__dirname, `../test-run/${app}-${testDate}`);
+      const os = require("os");
+      const backupDir = path.join(__dirname, `../test-run/${app.replaceAll("-", "_")}-${os.platform()}-${testDate}`);
       if (!fs.existsSync(backupDir)) {
         fs.mkdirSync(backupDir, {
           recursive: true,
