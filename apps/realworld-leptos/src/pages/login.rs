@@ -1,10 +1,27 @@
-use crate::auth::{LoginCommand, LoginResponse};
+use crate::auth::LoginUser;
 use crate::models::User;
+use crate::utils;
 use leptos::prelude::*;
 use leptos::task::spawn_local;
 use leptos_meta::*;
 use leptos_router::*;
-use serde_json::Value;
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct LoginCommand {
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct LoginRequest {
+    pub user: LoginCommand,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct LoginResponse {
+    pub user: LoginUser,
+}
 
 #[component]
 pub fn Login(
@@ -15,51 +32,6 @@ pub fn Login(
     let (error_message, set_error_message) = signal(String::from(""));
     let (username, set_username) = signal(String::from(""));
     let (password, set_password) = signal(String::from(""));
-
-    let login = move |email: String, password: String| async move {
-        let url = "http://localhost:8080/api/users/login";
-        let mut json_body = std::collections::HashMap::new();
-        let login_command = LoginCommand { email, password };
-        json_body.insert("user", login_command);
-
-        let client = reqwest::Client::new();
-        let res = client.post(url).json(&json_body).send().await;
-
-        let Ok(res) = res else {
-            set_error_message.set("unknown error".to_string());
-            return;
-        };
-        if !res.status().is_success() {
-            let error_message = res
-                .json::<Value>()
-                .await
-                .ok()
-                .and_then(|json| json.get("error").and_then(|msg| msg.as_str().map(String::from)))
-                .unwrap_or_else(|| "Unknown error".to_string());
-            set_error_message.set(error_message);
-            return;
-        }
-
-        let login_res = res
-            .bytes()
-            .await
-            .ok()
-            .map(|bytes| serde_json::from_slice::<Value>(&bytes).ok())
-            .flatten();
-
-        match login_res {
-            Some(login_res) => {
-                let login_res = serde_json::from_value::<LoginResponse>(login_res).unwrap();
-                set_access_token.set(Some(login_res.user.token.clone()));
-                set_user.set(Some(login_res.user.into()));
-
-            }
-            None => {
-                // Response is not valid json
-                set_error_message.set("unknown error".to_string());
-            }
-        }
-    };
 
     Effect::new(move || {
         if access_token.with(Option::is_some) {
@@ -80,7 +52,12 @@ pub fn Login(
                         <form on:submit=move |e| {
                             e.prevent_default();
                             spawn_local(async move {
-                                login(username.get_untracked(), password.get_untracked()).await;
+                                let login_command = LoginCommand {
+                                    email: username.get_untracked(),
+                                    password: password.get_untracked(),
+                                };
+                                login(&login_command, set_user, set_access_token, set_error_message)
+                                    .await;
                             });
                         }>
                             <fieldset class="form-group">
@@ -109,4 +86,28 @@ pub fn Login(
             </div>
         </div>
     }
+}
+
+async fn login(
+    login_command: &LoginCommand,
+    set_user: WriteSignal<Option<User>>,
+    set_access_token: WriteSignal<Option<String>>,
+    set_error_message: WriteSignal<String>,
+) {
+    let url = "http://localhost:8080/api/users/login";
+    let client = reqwest::Client::new();
+    let login_request = LoginRequest {
+        user: login_command.clone(),
+    };
+    let res = client.post(url).json(&login_request).send().await;
+    match utils::response_to_value(res).await {
+        Ok(val) => {
+            let login_res = serde_json::from_value::<LoginResponse>(val).unwrap();
+            set_access_token.set(Some(login_res.user.token.clone()));
+            set_user.set(Some(login_res.user.into()));
+        }
+        Err(err) => {
+            set_error_message.set(err.into());
+        }
+    };
 }

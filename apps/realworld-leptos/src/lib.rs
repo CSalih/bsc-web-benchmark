@@ -3,14 +3,15 @@ mod auth;
 mod components;
 mod models;
 mod pages;
+mod utils;
 
 use crate::components::Navbar;
+use crate::models::User;
 use crate::pages::*;
 use leptos::prelude::*;
 use leptos_meta::*;
 use leptos_router::components::{FlatRoutes, Route, Router};
 use leptos_router::path;
-use crate::models::User;
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -54,7 +55,10 @@ pub fn App() -> impl IntoView {
                 <FlatRoutes fallback=|| "Page not found.">
                     <Route path=path!("/") view=move || view! { <HomePage /> } />
                     <Route path=path!("/article/:slug") view=move || view! { <ArticlePage /> } />
-                    <Route path=path!("/login") view=move || view! { <Login set_user access_token set_access_token /> } />
+                    <Route
+                        path=path!("/login")
+                        view=move || view! { <Login set_user access_token set_access_token /> }
+                    />
                     <Route path=path!("/signup") view=move || view! { <SignupPage /> } />
                 </FlatRoutes>
             </main>
