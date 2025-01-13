@@ -34,7 +34,7 @@ pub fn ButtonFollow(author: ReadSignal<String>, following: bool) -> impl IntoVie
 
     view! {
         <Show
-            when=move || auth_context.username.get().unwrap_or_default() != author.get()
+            when=move || auth_context.user.get().map(|x| x.username()).unwrap_or_default() != author.get()
             fallback=|| ()
         >
             <form class="inline pull-xs-right">

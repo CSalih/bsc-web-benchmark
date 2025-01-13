@@ -18,6 +18,16 @@ pub struct User {
 }
 
 impl User {
+
+    pub fn new(username: String, email: String) -> Self {
+        Self {
+            username,
+            email,
+            ..Default::default()
+        }
+    }
+
+
     #[inline]
     pub fn username(&self) -> String {
         self.username.to_string()
