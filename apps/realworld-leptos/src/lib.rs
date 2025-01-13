@@ -4,7 +4,6 @@ mod components;
 mod models;
 mod pages;
 
-use crate::auth::{validate_signup, SignupCommand, SignupResponse};
 use crate::components::Navbar;
 use crate::pages::*;
 use leptos::prelude::*;
@@ -23,17 +22,6 @@ pub fn App() -> impl IntoView {
     let (user, set_user) = signal::<Option<User>>(None);
     provide_context::<auth::AuthContext>(auth::AuthContext::new(user, access_token));
 
-    let signup: auth::SignupSignal = Action::new(|data: &SignupCommand| {
-        let validation = validate_signup(&data);
-        async move {
-            if let Err(x) = validation {
-                return Ok(SignupResponse::ValidationError(x));
-            }
-            Ok(SignupResponse::CreateUserError(
-                "not implemented yet".into(),
-            ))
-        }
-    });
     let logout: auth::LogoutAction = Action::new(move |_| {
         set_access_token.set(None);
         set_user.set(None);
@@ -67,7 +55,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/") view=move || view! { <HomePage /> } />
                     <Route path=path!("/article/:slug") view=move || view! { <ArticlePage /> } />
                     <Route path=path!("/login") view=move || view! { <Login set_user access_token set_access_token /> } />
-                    <Route path=path!("/signup") view=move || view! { <SignupPage signup /> } />
+                    <Route path=path!("/signup") view=move || view! { <SignupPage /> } />
                 </FlatRoutes>
             </main>
             <footer>
