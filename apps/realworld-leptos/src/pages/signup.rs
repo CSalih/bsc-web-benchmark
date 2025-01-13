@@ -1,28 +1,26 @@
 use crate::auth::LoginUser;
+use crate::models::User;
+use crate::utils;
 use leptos::prelude::*;
 use leptos::task::spawn_local;
 use leptos_router::*;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
-use crate::models::User;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct SignupCommand {
+struct SignupCommand {
     pub username: String,
     pub email: String,
     pub password: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct  SignupResponse {
-    pub user: LoginUser,
+struct SignupRequest {
+    pub user: SignupCommand,
 }
 
-pub fn validate_signup(signup_command: &SignupCommand) -> Result<User, String> {
-    User::default()
-        .set_username(signup_command.username.clone())?
-        .set_password(signup_command.password.clone())?
-        .set_email(signup_command.email.clone())
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct SignupResponse {
+    pub user: LoginUser,
 }
 
 #[component]
@@ -33,53 +31,7 @@ pub fn SignupPage() -> impl IntoView {
     let (username, set_username) = signal(String::from(""));
     let (password, set_password) = signal(String::from(""));
 
-    let signup = move |username: String, email: String, password: String| async move {
-        let signup_command = SignupCommand { username, email, password };
-        if let Err(err) = validate_signup(&signup_command) {
-            set_error_message.set(err);
-            return;
-        }
-
-        let url = "http://localhost:8080/api/users";
-        let mut json_body = std::collections::HashMap::new();
-        json_body.insert("user", signup_command);
-
-        let client = reqwest::Client::new();
-        let res = client.post(url).json(&json_body).send().await;
-
-        let Ok(res) = res else {
-            set_error_message.set("unknown error".to_string());
-            return;
-        };
-        if !res.status().is_success() {
-            let error_message = res
-                .json::<Value>()
-                .await
-                .ok()
-                .and_then(|json| json.get("error").and_then(|msg| msg.as_str().map(String::from)))
-                .unwrap_or_else(|| "Unknown error".to_string());
-            set_error_message.set(error_message);
-            return;
-        }
-
-        let signup_res = res
-            .bytes()
-            .await
-            .ok()
-            .map(|bytes| serde_json::from_slice::<Value>(&bytes).ok())
-            .flatten();
-
-        match signup_res {
-            Some(login_res) => {
-                let _ = serde_json::from_value::<SignupResponse>(login_res).unwrap();
-                set_signup_success.set(true);
-            }
-            None => {
-                // Response is not valid json
-                set_error_message.set("unknown error".to_string());
-            }
-        }
-    };
+    // let signup = signup(set_signup_success, set_error_message);
 
     Effect::new(move || {
         if signup_success.get() {
@@ -103,11 +55,13 @@ pub fn SignupPage() -> impl IntoView {
                         <form on:submit=move |e| {
                             e.prevent_default();
                             spawn_local(async move {
-                                signup(
-                                    username.get_untracked(),
-                                    email.get_untracked(),
-                                    password.get_untracked()
-                                ).await;
+                                let signup_command = SignupCommand {
+                                    username: username.get_untracked(),
+                                    email: email.get_untracked(),
+                                    password: password.get_untracked(),
+                                };
+                                signup(&signup_command, set_signup_success, set_error_message)
+                                    .await;
                             });
                         }>
                             <fieldset class="form-group">
@@ -149,4 +103,38 @@ pub fn SignupPage() -> impl IntoView {
             </div>
         </div>
     }
+}
+
+fn validate_signup(signup_command: &SignupCommand) -> Result<User, String> {
+    User::default()
+        .set_username(signup_command.username.clone())?
+        .set_password(signup_command.password.clone())?
+        .set_email(signup_command.email.clone())
+}
+
+async fn signup(
+    signup_command: &SignupCommand,
+    set_signup_success: WriteSignal<bool>,
+    set_error_message: WriteSignal<String>,
+) {
+    if let Err(err) = validate_signup(&signup_command) {
+        set_error_message.set(err);
+        return;
+    }
+
+    let url = "http://localhost:8080/api/users";
+    let client = reqwest::Client::new();
+    let signup_request = SignupRequest {
+        user: signup_command.clone(),
+    };
+    let res = client.post(url).json(&signup_request).send().await;
+    match utils::response_to_value(res).await {
+        Ok(val) => {
+            let _ = serde_json::from_value::<SignupResponse>(val).unwrap();
+            set_signup_success.set(true);
+        }
+        Err(err) => {
+            set_error_message.set(err.into());
+        }
+    };
 }
