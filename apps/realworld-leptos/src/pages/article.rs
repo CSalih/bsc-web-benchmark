@@ -106,7 +106,7 @@ fn CommentSection(article: crate::components::ArticleSignal) -> impl IntoView {
 
     view! {
         <div class="col-xs-12 col-md-8 offset-md-2">
-            <Show when=move || auth_context.is_authenticated.get() fallback=|| ()>
+            <Show when=move || auth_context.user.with(Option::is_some) fallback=|| ()>
                 <form on:submit=on_submit class="card comment-form">
                     <input
                         name="slug"
@@ -193,7 +193,7 @@ fn Comment(comment: RwSignal<crate::models::Comment>) -> impl IntoView {
                 </span>
                 <Show
                     when=move || {
-                        auth_context.username.get().unwrap_or_default()
+                        auth_context.user.get().map(|x| x.username()).unwrap_or_default()
                             == comment.with(|x| x.username.to_string())
                     }
                     fallback=|| ()

@@ -5,7 +5,7 @@ use leptos::prelude::*;
 pub fn Navbar(logout: LogoutAction) -> impl IntoView {
     let auth_context = expect_context::<AuthContext>();
 
-    let profile_label = move || auth_context.username.get().unwrap_or_default();
+    let profile_label = move || auth_context.user.get().unwrap_or_default().username();
     let profile_href = move || format!("/profile/{}", profile_label());
 
     view! {
@@ -15,7 +15,7 @@ pub fn Navbar(logout: LogoutAction) -> impl IntoView {
             </a>
         </li>
         <Show
-            when=move || auth_context.is_authenticated.get()
+            when=move || auth_context.user.with(Option::is_some)
             fallback=move || {
                 view! {
                     <li class="nav-item">

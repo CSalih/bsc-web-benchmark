@@ -85,7 +85,7 @@ pub fn ArticleMeta(article: ArticleSignal, is_preview: bool) -> impl IntoView {
                     view! {
                         <Show
                             when=move || {
-                                auth_context.username.get().unwrap_or_default()
+                                auth_context.user.get().map(|x| x.username()).unwrap_or_default()
                                     == article.with(|x| x.author.username.to_string())
                             }
                             fallback=move || {
@@ -95,7 +95,7 @@ pub fn ArticleMeta(article: ArticleSignal, is_preview: bool) -> impl IntoView {
                                 );
                                 view! {
                                     <Show
-                                        when=move || auth_context.is_authenticated.get()
+                                        when=move || auth_context.user.with(Option::is_some)
                                         fallback=|| ()
                                     >
                                         <ButtonFav article=article />

@@ -11,6 +11,7 @@ use leptos::prelude::*;
 use leptos_meta::*;
 use leptos_router::components::{FlatRoutes, Route, Router};
 use leptos_router::path;
+use crate::models::User;
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -18,23 +19,12 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     // Provides context that manages the authentication state.
-    let (is_authenticated, set_is_authenticated) = signal(false);
-    let (username, set_username) = signal::<Option<String>>(None);
-    provide_context::<auth::AuthContext>(auth::AuthContext::new(is_authenticated, username));
+    let (access_token, set_access_token) = signal::<Option<String>>(None);
+    let (user, set_user) = signal::<Option<User>>(None);
+    provide_context::<auth::AuthContext>(auth::AuthContext::new(user, access_token));
 
-    // Actions for login, signup, and logout.
-    let login: auth::LoginAction = Action::new(move |data: &auth::LoginCommand| {
-        let data = data.to_owned();
-
-        set_is_authenticated.set(true);
-        set_username.set(Some(data.username.clone()));
-
-        // Simulate a successful login.
-        async move { Ok(auth::LoginMessages::Successful) }
-    });
     let signup: auth::SignupSignal = Action::new(|data: &SignupCommand| {
         let validation = validate_signup(&data);
-
         async move {
             if let Err(x) = validation {
                 return Ok(SignupResponse::ValidationError(x));
@@ -45,8 +35,8 @@ pub fn App() -> impl IntoView {
         }
     });
     let logout: auth::LogoutAction = Action::new(move |_| {
-        set_is_authenticated.set(false);
-        set_username.set(None);
+        set_access_token.set(None);
+        set_user.set(None);
 
         async move { true }
     });
@@ -76,7 +66,7 @@ pub fn App() -> impl IntoView {
                 <FlatRoutes fallback=|| "Page not found.">
                     <Route path=path!("/") view=move || view! { <HomePage /> } />
                     <Route path=path!("/article/:slug") view=move || view! { <ArticlePage /> } />
-                    <Route path=path!("/login") view=move || view! { <Login login /> } />
+                    <Route path=path!("/login") view=move || view! { <Login set_user access_token set_access_token /> } />
                     <Route path=path!("/signup") view=move || view! { <SignupPage signup /> } />
                 </FlatRoutes>
             </main>
