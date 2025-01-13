@@ -14,7 +14,7 @@ pub fn HomePage() -> impl IntoView {
     let your_feed_class = move || {
         format!(
             "nav-link {}",
-            if auth_context.username.with(Option::is_none) {
+            if auth_context.user.with(Option::is_none) {
                 "disabled"
             } else if !pagination.get().get_my_feed() {
                 "active"
@@ -49,7 +49,7 @@ pub fn HomePage() -> impl IntoView {
                     <div class="col-md-9">
                         <div class="feed-toggle">
                             <ul class="nav nav-pills outline-active">
-                                <Show when=move || { auth_context.is_authenticated.get() }>
+                                <Show when=move || { auth_context.user.with(Option::is_none) }>
                                     <li class="nav-item">
                                         <button
                                             class=your_feed_class

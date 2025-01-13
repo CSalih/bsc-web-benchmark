@@ -16,7 +16,7 @@ pub enum LoginMessages {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct LoginCommand {
-    pub username: String,
+    pub email: String,
     pub password: String,
 }
 
@@ -35,23 +35,23 @@ pub fn validate_signup(signup_command: &SignupCommand) -> Result<crate::models::
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct LoginResponse {
-    pub user: crate::models::User,
+pub struct LoginUser {
+    pub email: String,
+    pub token: String,
+    pub username: String,
+    pub bio: Option<String>,
+    pub image: Option<String>,
 }
 
-pub async fn login_user(login_command: &LoginCommand) -> LoginResponse {
-    let url = "http://localhost:8080/api/users/login";
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct LoginResponse {
+    pub user: LoginUser,
+}
 
-    let mut json_body = std::collections::HashMap::new();
-    json_body.insert("user", login_command);
-
-    reqwest::Client::new()
-        .post(url)
-        .json(&json_body)
-        .send()
-        .await
-        .unwrap()
-        .json::<LoginResponse>()
-        .await
-        .unwrap()
+impl Into<crate::models::User> for LoginUser {
+    fn into(self) -> crate::models::User {
+        crate::models::User::new(self.username, self.email)
+            .set_bio(self.bio.unwrap_or_default()).unwrap()
+            .set_image(self.image.unwrap_or_default()).unwrap()
+    }
 }
