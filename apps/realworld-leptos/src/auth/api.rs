@@ -1,12 +1,7 @@
 use leptos::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub enum SignupResponse {
-    ValidationError(String),
-    CreateUserError(String),
-    Success,
-}
+
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum LoginMessages {
@@ -20,19 +15,6 @@ pub struct LoginCommand {
     pub password: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct SignupCommand {
-    pub username: String,
-    pub email: String,
-    pub password: String,
-}
-
-pub fn validate_signup(signup_command: &SignupCommand) -> Result<crate::models::User, String> {
-    crate::models::User::default()
-        .set_username(signup_command.username.clone())?
-        .set_password(signup_command.password.clone())?
-        .set_email(signup_command.email.clone())
-}
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct LoginUser {

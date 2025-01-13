@@ -5,7 +5,6 @@ mod api;
 pub use api::*;
 
 pub type LogoutAction = Action<(), bool>;
-pub type SignupSignal = Action<SignupCommand, Result<SignupResponse, ServerFnError>>;
 
 #[derive(Clone, Debug)]
 pub struct AuthContext {
