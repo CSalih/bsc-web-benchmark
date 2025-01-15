@@ -31,13 +31,13 @@ static ADJECTIVES: &[&str] = &[
 ];
 
 static COLOURS: &[&str] = &[
-    "red", "yellow", "blue", "green", "pink", "brown", "purple", "brown",
-    "white", "black", "orange",
+    "red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black",
+    "orange",
 ];
 
 static NOUNS: &[&str] = &[
-    "table", "chair", "house", "bbq", "desk", "car", "pony", "cookie",
-    "sandwich", "burger", "pizza", "mouse", "keyboard",
+    "table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger",
+    "pizza", "mouse", "keyboard",
 ];
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -71,8 +71,7 @@ fn build_data(count: usize) -> Vec<RowData> {
             label: ArcRwSignal::new(label),
         });
 
-        ID_COUNTER
-            .store(ID_COUNTER.load(Ordering::Relaxed) + 1, Ordering::Relaxed);
+        ID_COUNTER.store(ID_COUNTER.load(Ordering::Relaxed) + 1, Ordering::Relaxed);
     }
 
     data
@@ -150,12 +149,12 @@ pub fn App() -> impl IntoView {
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <Button id="run" text="Create 1,000 rows" on:click=run/>
-                            <Button id="runlots" text="Create 10,000 rows" on:click=run_lots/>
-                            <Button id="add" text="Append 1,000 rows" on:click=add/>
-                            <Button id="update" text="Update every 10th row" on:click=update/>
-                            <Button id="clear" text="Clear" on:click=clear/>
-                            <Button id="swaprows" text="Swap Rows" on:click=swap_rows/>
+                            <Button id="run" text="Create 1,000 rows" on:click=run />
+                            <Button id="runlots" text="Create 10,000 rows" on:click=run_lots />
+                            <Button id="add" text="Append 1,000 rows" on:click=add />
+                            <Button id="update" text="Update every 10th row" on:click=update />
+                            <Button id="clear" text="Clear" on:click=clear />
+                            <Button id="swaprows" text="Swap Rows" on:click=swap_rows />
                         </div>
                     </div>
                 </div>
@@ -170,17 +169,23 @@ pub fn App() -> impl IntoView {
                             let label = row.label;
                             let is_selected = is_selected.clone();
                             template! {
-                                < tr class : danger = { move || is_selected.selected(Some(row_id)) }
-                                > < td class = "col-md-1" > { row_id.to_string() } </ td > < td
-                                class = "col-md-4" >< a on : click = move | _ | set_selected
-                                .set(Some(row_id)) > { move || label.get() } </ a ></ td > < td
-                                class = "col-md-1" >< a on : click = move | _ | remove(row_id) ><
-                                span class = "glyphicon glyphicon-remove" aria - hidden = "true" ></
-                                span ></ a ></ td > < td class = "col-md-6" /> </ tr >
+                                <tr class:danger=move || is_selected.selected(Some(row_id))>
+                                    <td class="col-md-1">{ row_id.to_string() }</td>
+                                    <td class="col-md-4">
+                                        <a on:click=move | _ | set_selected.set(Some(row_id))>
+                                            {move || label.get()}
+                                        </a>
+                                    </td>
+                                    <td class="col-md-1">
+                                        <a on:click=move |_| remove(row_id)>
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true" />
+                                        </a>
+                                    </td>
+                                    <td class="col-md-6" />
+                                </tr>
                             }
                         }
                     />
-
                 </tbody>
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>

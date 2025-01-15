@@ -20,6 +20,5 @@ lib-profile-release = "wasm-release"
 leptos = { version = "0.7.2", features = ["csr"] }
 
 # used in rand, but we need to enable js feature
-getrandom = { version = "0.2.15", features = ["js"] }
 rand = { version = "0.8.5", features = ["small_rng"] }
 console_error_panic_hook = "0.1.7"
