@@ -8,12 +8,20 @@ export const persistMeasure = (page: Page, measure: PerformanceMeasure) => {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
+  const filename = `${outputDir}/benchmark-results.csv`;
   const browser = page.context().browser().browserType().name();
+  const operatingSystem = process.platform;
+  const appName = process.env.APP_NAME || "unknown";
 
-  fs.appendFileSync(
-    `${outputDir}/${measure.name}-${browser}.txt`,
-    `${measure.duration}\n`,
-  );
+  const row = [
+    appName,
+    measure.name,
+    operatingSystem,
+    browser,
+    measure.duration,
+  ].join(",");
+
+  fs.appendFileSync(filename, `${row}\n`);
   test.info().annotations.push({
     type: "measure",
     description: `${measure.name}: ${measure.duration.toFixed(2)}ms`,
