@@ -65,6 +65,7 @@ const backupResults = (outputDir) => {
 };
 
 const runBenchmark = ({
+  appName,
   baseUrl,
   workers = 1,
   repeatEach = 100,
@@ -87,6 +88,7 @@ const runBenchmark = ({
       stdio: "inherit",
       env: {
         ...process.env,
+        APP_NAME: appName,
         APP_BASE_URL: baseUrl,
       },
     },
@@ -167,6 +169,7 @@ program
       const url = baseUrl[app];
       const container = startWebServer(app, url);
       runBenchmark({
+        appName: app,
         baseUrl: url,
         workers: options.workers,
         repeatEach: options.repeat,
@@ -176,7 +179,7 @@ program
       // backup results
       console.log(`Backing up results for ${app}`);
       const os = require("os");
-      const backupDir = path.join(__dirname, `../test-run/${app.replaceAll("-", "_")}-${os.platform()}-${testDate}`);
+      const backupDir = path.join(__dirname, `../test-run/${app}_${os.platform()}_${testDate}`);
       if (!fs.existsSync(backupDir)) {
         fs.mkdirSync(backupDir, {
           recursive: true,
