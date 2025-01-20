@@ -6,13 +6,29 @@ const { spawnSync } = require("child_process");
 const process = require("process");
 const { Command, Option } = require("commander");
 
-const apps = ["app-angular", "app-leptos", "app-react", "app-vue"];
-const baseUrl = {
-  "app-angular": "http://localhost:3000",
-  "app-leptos": "http://localhost:3001",
-  "app-react": "http://localhost:3002",
-  "app-vue": "http://localhost:3003",
+const apps = {
+  "app-angular": {
+    baseUrl: "http://localhost:3000",
+    testFile: "tests/responsiveness.spec.ts",
+  },
+  "app-leptos": {
+    baseUrl: "http://localhost:3001",
+    testFile: "tests/responsiveness.spec.ts",
+  },
+  "app-react": {
+    baseUrl: "http://localhost:3002",
+    testFile: "tests/responsiveness.spec.ts",
+  },
+  "app-vue": {
+    baseUrl: "http://localhost:3003",
+    testFile: "tests/responsiveness.spec.ts",
+  },
+  "realworld-vue": {
+    baseUrl: "http://localhost:4003",
+    testFile: "tests/initial-rendering.spec.ts",
+  },
 };
+
 
 const dumpSystemInfo = (outputDir) => {
   const os = require("os");
@@ -71,6 +87,7 @@ const runBenchmark = ({
   repeatEach = 100,
   maxFailures = 10,
   retries = 3,
+  testFile,
 }) => {
   console.log("Starting benchmark");
   const benchmarkResult = spawnSync(
@@ -82,7 +99,7 @@ const runBenchmark = ({
       `--workers=${workers}`,
       `--max-failures=${maxFailures}`,
       `--retries=${retries}`,
-      "tests/responsiveness.spec.ts",
+      testFile,
     ],
     {
       stdio: "inherit",
@@ -152,11 +169,11 @@ program
     isDefault: true,
   })
   .description("Run the benchmark")
-  .addOption(new Option("-a, --app [app...]").default("all").choices(apps))
+  .addOption(new Option("-a, --app [app...]").default("all").choices(Object.keys(apps)))
   .addOption(new Option("-n, --repeat [repeat]").default(100))
   .addOption(new Option("-j, --workers [workers]").default(1))
   .action((options) => {
-    const appsToRun = apps.filter((app) => {
+    const appsToRun = Object.keys(apps).filter((app) => {
       if (options.app === "all") {
         return true;
       }
@@ -165,21 +182,22 @@ program
 
     console.log("Running benchmarks for", appsToRun.join(", "));
 
-    appsToRun.forEach((app) => {
-      const url = baseUrl[app];
-      const container = startWebServer(app, url);
+    appsToRun.forEach((appName) => {
+      const app = apps[appName];
+      const container = startWebServer(appName, app.baseUrl);
       runBenchmark({
-        appName: app,
-        baseUrl: url,
+        appName,
+        baseUrl: app.baseUrl,
         workers: options.workers,
         repeatEach: options.repeat,
-        maxFailures: 50
+        maxFailures: 50,
+        testFile: app.testFile
       });
 
       // backup results
-      console.log(`Backing up results for ${app}`);
+      console.log(`Backing up results for ${appName}`);
       const os = require("os");
-      const backupDir = path.join(__dirname, `../test-run/${app}_${os.platform()}_${testDate}`);
+      const backupDir = path.join(__dirname, `../test-run/${appName}_${os.platform()}_${testDate}`);
       if (!fs.existsSync(backupDir)) {
         fs.mkdirSync(backupDir, {
           recursive: true,

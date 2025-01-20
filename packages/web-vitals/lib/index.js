@@ -41,9 +41,14 @@ function sendToAnalyticsServer(metric) {
   }
 }
 
-onTTFB(sendToAnalyticsServer);
-onFCP(sendToAnalyticsServer);
-onCLS(sendToAnalyticsServer);
-onFID(sendToAnalyticsServer);
-onLCP(sendToAnalyticsServer);
-onINP(sendToAnalyticsServer);
+function persistInMemory(metric) {
+  window.webVitals = window.webVitals || [];
+  window.webVitals.push(metric);
+}
+
+onTTFB(persistInMemory);
+onFCP(persistInMemory);
+onCLS(persistInMemory);
+onFID(persistInMemory);
+onLCP(persistInMemory);
+onINP(persistInMemory);
