@@ -1,133 +1,144 @@
-use leptos::*;
-use leptos_meta::*;
-use leptos_router::*;
-
+use leptos::prelude::*;
+use leptos::task::spawn_local;
 use serde::{Deserialize, Serialize};
+use crate::{auth, utils};
+use crate::auth::{LoginUser, LogoutAction};
+use crate::models::User;
 
-#[derive(Deserialize, Serialize, Clone, Debug)]
-pub enum SettingsUpdateError {
-    PasswordsNotMatch,
-    Successful,
-    ValidationError(String),
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct UpdateUserCommand {
+    pub email: Option<String>,
+    pub username: Option<String>,
+    pub image: Option<String>,
+    pub bio: Option<String>,
+    pub password: Option<String>,
 }
 
-#[server(SettingsUpdateAction, "/api")]
-pub async fn settings_update(
-    image: String,
-    bio: String,
-    email: String,
-    password: String,
-    confirm_password: String,
-) -> Result<SettingsUpdateError, ServerFnError> {
-    let user = get_user().await?;
-    let username = user.username();
-    let user = match update_user_validation(user, image, bio, email, password, &confirm_password) {
-        Ok(x) => x,
-        Err(x) => return Ok(x),
-    };
-    user.update()
-        .await
-        .map(|_| SettingsUpdateError::Successful)
-        .map_err(move |x| {
-            tracing::error!(
-                "Problem while updating user: {} with error {}",
-                username,
-                x.to_string()
-            );
-            ServerFnError::ServerError("Problem while updating user".into())
-        })
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct UpdateUserRequest {
+    pub user: UpdateUserCommand,
 }
 
-fn update_user_validation(
-    mut user: crate::models::User,
-    image: String,
-    bio: String,
-    email: String,
-    password: String,
-    confirm_password: &str,
-) -> Result<crate::models::User, SettingsUpdateError> {
-    if !password.is_empty() {
-        if password != confirm_password {
-            return Err(SettingsUpdateError::PasswordsNotMatch);
-        }
-        user = user
-            .set_password(password)
-            .map_err(SettingsUpdateError::ValidationError)?;
-    }
-
-    user.set_email(email)
-        .map_err(SettingsUpdateError::ValidationError)?
-        .set_bio(bio)
-        .map_err(SettingsUpdateError::ValidationError)?
-        .set_image(image)
-        .map_err(SettingsUpdateError::ValidationError)
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct UpdateUserResponse {
+    pub user: LoginUser,
 }
 
-#[cfg(feature = "ssr")]
-async fn get_user() -> Result<crate::models::User, ServerFnError> {
-    let Some(username) = crate::auth::get_username() else {
-        leptos_axum::redirect("/login");
-        return Err(ServerFnError::ServerError(
-            "You need to be authenticated".to_string(),
-        ));
-    };
-
-    crate::models::User::get(username).await.map_err(|x| {
-        let err = x.to_string();
-        tracing::error!("problem while getting the user {err}");
-        ServerFnError::ServerError(err)
-    })
-}
-
-#[server(SettingsGetAction, "/api", "GetJson")]
-pub async fn settings_get() -> Result<crate::models::User, ServerFnError> {
-    get_user().await
-}
-
-#[derive(Debug, Default, Deserialize, Serialize, Clone)]
-pub struct UserGet {
-    username: String,
-    email: String,
-    bio: Option<String>,
-    image: Option<String>,
-}
 
 #[component]
-pub fn Settings(logout: crate::auth::LogoutSignal) -> impl IntoView {
-    let resource = create_resource(|| (), move |_| settings_get());
+#[allow(non_snake_case)]
+pub fn SettingsPage(logout: LogoutAction, update_user: WriteSignal<Option<User>>) -> impl IntoView {
+    let auth_context = expect_context::<auth::AuthContext>();
+
+    let Some(user) = auth_context.user.get() else {
+        panic!("ss");
+    };
+
+    let (error_messages, set_error_messages) = signal(Vec::<String>::new());
+    let (profile_picture, set_profile_picture) = signal(user.image().unwrap_or_default());
+    let (name, set_name) = signal(user.username());
+    let (bio, set_bio) = signal(user.bio().unwrap_or_default());
+    let (email, set_email) = signal(user.email());
+    let (new_password, set_new_password) = signal(String::new());
 
     view! {
-        <Title text="Settings" />
-
         <div class="settings-page">
             <div class="container page">
                 <div class="row">
                     <div class="col-md-6 offset-md-3 col-xs-12">
-                        <h1 class="text-xs-center">"Your Settings"</h1>
+                        <h1 class="text-xs-center">Your Settings</h1>
 
-                        <Suspense fallback=move || view! { <p>"Loading user settings"</p> }>
-                            <ErrorBoundary fallback=|_| {
-                                view! {
-                                    <p>
-                                        "There was a problem while fetching settings, try again later"
-                                    </p>
-                                }
-                            }>
-                                {move || {
-                                    resource
-                                        .get()
-                                        .map(move |x| {
-                                            x.map(move |user| view! { <SettingsViewForm user /> })
-                                        })
-                                }}
-                            </ErrorBoundary>
-                        </Suspense>
+                        <Show when=move || !error_messages.get().is_empty()>
+                            <ul class="error-messages">
+                                <For
+                                    each=move || error_messages.get().into_iter().enumerate()
+                                    key=|(index, _)| *index
+                                    children=move |(_, message)| {
+                                        let message = message.to_string();
+                                        view! { <li>{message}</li> }
+                                    }
+                                />
+                            </ul>
+                        </Show>
+
+                        <form on:submit=move |e| {
+                            e.prevent_default();
+                            spawn_local(async move {
+                                let update_user_command = UpdateUserCommand {
+                                    email: Some(email.get_untracked()),
+                                    username: Some(name.get_untracked()),
+                                    image: Some(profile_picture.get_untracked()),
+                                    bio: Some(bio.get_untracked()),
+                                    password: Some(new_password.get_untracked()),
+                                };
+                                login(
+                                        &update_user_command,
+                                        auth_context
+                                            .access_token
+                                            .get_untracked()
+                                            .unwrap_or_default(),
+                                        update_user,
+                                        set_error_messages,
+                                    )
+                                    .await;
+                            });
+                        }>
+                            <fieldset>
+                                <fieldset class="form-group">
+                                    <input
+                                        class="form-control"
+                                        type="text"
+                                        placeholder="URL of profile picture"
+                                        bind:value=(profile_picture, set_profile_picture)
+                                    />
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="text"
+                                        placeholder="Your Name"
+                                        bind:value=(name, set_name)
+                                    />
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <textarea
+                                        class="form-control form-control-lg"
+                                        rows="8"
+                                        placeholder="Short bio about you"
+                                        bind:value=(bio, set_bio)
+                                    />
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="text"
+                                        placeholder="Email"
+                                        bind:value=(email, set_email)
+                                    />
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <input
+                                        class="form-control form-control-lg"
+                                        type="password"
+                                        placeholder="New Password"
+                                        bind:value=(new_password, set_new_password)
+                                    />
+                                </fieldset>
+                                <button class="btn btn-lg btn-primary pull-xs-right">
+                                    Update Settings
+                                </button>
+                            </fieldset>
+                        </form>
                         <hr />
-                        <ActionForm action=logout>
-                            <button type="submit" class="btn btn-outline-danger">
-                                "Or click here to logout."
-                            </button>
-                        </ActionForm>
+                        <button
+                            class="btn btn-outline-danger"
+                            on:click=move |_| {
+                                logout.dispatch(());
+                            }
+                        >
+                            Or click here to logout.
+                        </button>
                     </div>
                 </div>
             </div>
@@ -135,116 +146,33 @@ pub fn Settings(logout: crate::auth::LogoutSignal) -> impl IntoView {
     }
 }
 
-#[component]
-fn SettingsViewForm(user: crate::models::User) -> impl IntoView {
-    let settings_server_action = create_server_action::<SettingsUpdateAction>();
-    let result = settings_server_action.value();
-    let error = move || {
-        result.with(|x| {
-            x.as_ref().map_or(true, |y| {
-                y.is_err() || !matches!(y, Ok(SettingsUpdateError::Successful))
-            })
-        })
+async fn login(
+    update_user_command: &UpdateUserCommand,
+    auth_token: String,
+    set_user: WriteSignal<Option<User>>,
+    set_error_messages: WriteSignal<Vec<String>>,
+) {
+    let url = "http://localhost:8080/api/user";
+    let client = reqwest::Client::new();
+    let login_request = UpdateUserRequest {
+        user: update_user_command.clone(),
     };
-
-    view! {
-        <p class="text-xs-center" class:text-success=move || !error() class:error-messages=error>
-            <strong>
-                {move || {
-                    result
-                        .with(|x| {
-                            match x {
-                                Some(Ok(SettingsUpdateError::Successful)) => {
-                                    "Successfully update settings".to_string()
-                                }
-                                Some(Ok(SettingsUpdateError::ValidationError(x))) => {
-                                    format!("Problem while validating: {x:?}")
-                                }
-                                Some(Ok(SettingsUpdateError::PasswordsNotMatch)) => {
-                                    "Passwords don't match".to_string()
-                                }
-                                Some(Err(x)) => format!("{x:?}"),
-                                None => String::new(),
-                            }
-                        })
-                }}
-            </strong>
-        </p>
-
-        <ActionForm
-            action=settings_server_action
-            on:submit=move |ev| {
-                let Ok(data) = SettingsUpdateAction::from_event(&ev) else {
-                    return ev.prevent_default();
-                };
-                if let Err(x) = update_user_validation(
-                    crate::models::User::default(),
-                    data.image,
-                    data.bio,
-                    data.email,
-                    data.password,
-                    &data.confirm_password,
-                ) {
-                    result.set(Some(Ok(x)));
-                    ev.prevent_default();
-                }
-            }
-        >
-            <fieldset>
-                <fieldset class="form-group">
-                    <input
-                        name="image"
-                        value=user.image()
-                        class="form-control"
-                        type="text"
-                        placeholder="URL of profile picture"
-                    />
-                </fieldset>
-                <fieldset class="form-group">
-                    <input
-                        disabled
-                        value=user.username()
-                        class="form-control form-control-lg"
-                        type="text"
-                        placeholder="Your Name"
-                    />
-                </fieldset>
-                <fieldset class="form-group">
-                    <textarea
-                        name="bio"
-                        class="form-control form-control-lg"
-                        rows="8"
-                        placeholder="Short bio about you"
-                        prop:value=user.bio().unwrap_or_default()
-                    ></textarea>
-                </fieldset>
-                <fieldset class="form-group">
-                    <input
-                        name="email"
-                        value=user.email()
-                        class="form-control form-control-lg"
-                        type="text"
-                        placeholder="Email"
-                    />
-                </fieldset>
-                <fieldset class="form-group">
-                    <input
-                        name="password"
-                        class="form-control form-control-lg"
-                        type="password"
-                        placeholder="New Password"
-                    />
-                    <input
-                        name="confirm_password"
-                        class="form-control form-control-lg"
-                        type="password"
-                        placeholder="Confirm New Password"
-                    />
-                </fieldset>
-                <button class="btn btn-lg btn-primary pull-xs-right" type="submit">
-                    "Update Settings"
-                </button>
-            </fieldset>
-        </ActionForm>
-    }
+    set_error_messages.set(Vec::new());
+    let res = client
+        .put(url)
+        .header("Token", &auth_token.to_string())
+        .json(&login_request)
+        .send()
+        .await;
+    match utils::response_to_value(res).await {
+        Ok(val) => {
+            let login_res = serde_json::from_value::<UpdateUserResponse>(val).unwrap();
+            set_user.set(Some(login_res.user.into()));
+        }
+        Err(err) => {
+            set_error_messages.update(|errors| {
+                errors.push(err.to_string());
+            });
+        }
+    };
 }
