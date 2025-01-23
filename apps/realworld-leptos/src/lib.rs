@@ -10,7 +10,7 @@ use crate::models::User;
 use crate::pages::*;
 use leptos::prelude::*;
 use leptos_meta::*;
-use leptos_router::components::{FlatRoutes, Route, Router};
+use leptos_router::components::{FlatRoutes, Route, Router, ProtectedRoute};
 use leptos_router::path;
 
 #[component]
@@ -60,6 +60,12 @@ pub fn App() -> impl IntoView {
                         view=move || view! { <Login set_user access_token set_access_token /> }
                     />
                     <Route path=path!("/signup") view=move || view! { <SignupPage /> } />
+                    <ProtectedRoute
+                        condition=move || user.get().map(|_| Some(true)).unwrap_or_default()
+                        redirect_path=|| "/login"
+                        path=path!("/settings")
+                        view=move || view! { <SettingsPage update_user=set_user logout /> }
+                    />
                 </FlatRoutes>
             </main>
             <footer>
