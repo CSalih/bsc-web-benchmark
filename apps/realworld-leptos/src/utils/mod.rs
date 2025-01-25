@@ -23,8 +23,7 @@ pub async fn response_to_value(
             .bytes()
             .await
             .ok()
-            .map(|bytes| serde_json::from_slice::<Value>(&bytes).ok())
-            .flatten();
+            .and_then(|bytes| serde_json::from_slice::<Value>(&bytes).ok());
 
         match signup_res {
             Some(login_res) => Ok(login_res),

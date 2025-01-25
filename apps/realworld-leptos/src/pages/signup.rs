@@ -117,7 +117,7 @@ async fn signup(
     set_signup_success: WriteSignal<bool>,
     set_error_message: WriteSignal<String>,
 ) {
-    if let Err(err) = validate_signup(&signup_command) {
+    if let Err(err) = validate_signup(signup_command) {
         set_error_message.set(err);
         return;
     }
@@ -134,7 +134,7 @@ async fn signup(
             set_signup_success.set(true);
         }
         Err(err) => {
-            set_error_message.set(err.into());
+            set_error_message.set(err);
         }
     };
 }

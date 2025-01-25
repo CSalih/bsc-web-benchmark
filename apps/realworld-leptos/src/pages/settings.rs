@@ -1,10 +1,9 @@
+use crate::auth::{LoginUser, LogoutAction};
+use crate::models::User;
+use crate::{auth, utils};
 use leptos::prelude::*;
 use leptos::task::spawn_local;
 use serde::{Deserialize, Serialize};
-use crate::{auth, utils};
-use crate::auth::{LoginUser, LogoutAction};
-use crate::models::User;
-
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct UpdateUserCommand {
@@ -24,7 +23,6 @@ struct UpdateUserRequest {
 struct UpdateUserResponse {
     pub user: LoginUser,
 }
-
 
 #[component]
 #[allow(non_snake_case)]

@@ -107,7 +107,7 @@ async fn login(
             set_user.set(Some(login_res.user.into()));
         }
         Err(err) => {
-            set_error_message.set(err.into());
+            set_error_message.set(err);
         }
     };
 }

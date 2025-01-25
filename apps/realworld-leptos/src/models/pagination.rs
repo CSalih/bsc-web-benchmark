@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 #[derive(Debug, PartialEq, Clone, Hash, PartialOrd, Eq)]
 pub struct Pagination {
     tag: Option<String>,
@@ -25,18 +27,6 @@ impl Pagination {
     }
 
     #[inline]
-    pub fn set_tag<T: ToString + ?Sized>(mut self, tag: &T) -> Self {
-        self.tag = Some(tag.to_string());
-        self
-    }
-
-    #[inline]
-    pub fn set_amount(mut self, amount: u32) -> Self {
-        self.amount = Some(amount);
-        self
-    }
-
-    #[inline]
     pub fn set_my_feed(mut self, feed: bool) -> Self {
         self.my_feed = Some(feed);
         self
@@ -53,18 +43,6 @@ impl Pagination {
         self.page = Some(page);
         self
     }
-
-    #[inline]
-    pub fn next_page(mut self) -> Self {
-        self.page = Some(self.page.unwrap_or_default().saturating_add(1));
-        self
-    }
-
-    #[inline]
-    pub fn previous_page(mut self) -> Self {
-        self.page = Some(self.page.unwrap_or_default().saturating_sub(1));
-        self
-    }
 }
 
 impl Default for Pagination {
@@ -78,14 +56,15 @@ impl Default for Pagination {
     }
 }
 
-impl ToString for Pagination {
-    fn to_string(&self) -> String {
-        format!(
+impl Display for Pagination {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let str = format!(
             "/?tag={}&my_feed={}&page={}&amount={}",
             self.get_tag(),
             self.get_my_feed(),
             self.get_page(),
             self.get_amount(),
-        )
+        );
+        write!(f, "{}", str)
     }
 }

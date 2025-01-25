@@ -10,7 +10,7 @@ use crate::models::User;
 use crate::pages::*;
 use leptos::prelude::*;
 use leptos_meta::*;
-use leptos_router::components::{FlatRoutes, Route, Router, ProtectedRoute};
+use leptos_router::components::{FlatRoutes, ProtectedRoute, Route, Router};
 use leptos_router::path;
 
 #[component]

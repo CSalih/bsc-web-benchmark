@@ -140,7 +140,7 @@ pub fn HomePage() -> impl IntoView {
 
 #[component]
 fn TagList() -> impl IntoView {
-    let tags_res = LocalResource::new(move || Tag::load_tags());
+    let tags_res = LocalResource::new(Tag::load_tags);
 
     view! {
         <div class="tag-list">
@@ -155,7 +155,7 @@ fn TagList() -> impl IntoView {
                                 view! {
                                     <For
                                         each=move || {
-                                            (&tags_res.tags).clone().into_iter().enumerate()
+                                            tags_res.tags.clone().into_iter().enumerate()
                                         }
                                         key=|(i, _)| *i
                                         children=move |(_, tag): (usize, String)| {
