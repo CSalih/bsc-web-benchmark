@@ -17,14 +17,14 @@ function sendToAnalyticsServer(metric) {
       cpus: navigator ? navigator.hardwareConcurrency : undefined,
       webdriver: navigator ? navigator.webdriver : undefined,
       connection: navigator?.connection
-        ? ({
+        ? {
             type: navigator.connection.type,
             downlink: navigator.connection.downlink,
             downlinkMax: navigator.connection.downlinkMax,
             effectiveType: navigator.connection.effectiveType,
             saveData: navigator.connection.saveData,
             rtt: navigator.connection.rtt,
-          } ?? undefined)
+          } ?? undefined
         : undefined,
     },
     data: metric,

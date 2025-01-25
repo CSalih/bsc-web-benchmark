@@ -78,7 +78,9 @@ export class AppComponent {
     for (var i = 0; i < count; i++) {
       data[i] = {
         id: this.id,
-        label: `${adjectives[this._random(adjectives.length)]} ${colours[this._random(colours.length)]} ${nouns[this._random(nouns.length)]}`,
+        label: `${adjectives[this._random(adjectives.length)]} ${
+          colours[this._random(colours.length)]
+        } ${nouns[this._random(nouns.length)]}`,
       };
       this.id++;
     }

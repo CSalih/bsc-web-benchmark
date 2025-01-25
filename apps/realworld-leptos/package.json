@@ -1,11 +1,12 @@
 {
-    "name": "realworld-leptos",
-    "version": "0.1.0",
-    "private": true,
-    "license": "UNLICENSED",
-    "scripts": {
-        "dev": "trunk serve --port 4001",
-        "build": "trunk build --release",
-        "build:docker": "docker build -t bsc/realworld-leptos:latest . --file Dockerfile"
-    }
+  "name": "realworld-leptos",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "format": "leptosfmt .",
+    "dev": "trunk serve --port 4001",
+    "build": "trunk build --release",
+    "build:docker": "docker build -t bsc/realworld-leptos:latest . --file Dockerfile"
+  }
 }
