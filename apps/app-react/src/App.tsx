@@ -70,7 +70,9 @@ const buildData = (count: number): Data[] => {
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: nextId++,
-      label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`,
+      label: `${A[random(A.length)]} ${C[random(C.length)]} ${
+        N[random(N.length)]
+      }`,
     };
   }
 

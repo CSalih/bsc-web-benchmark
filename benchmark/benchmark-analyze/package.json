@@ -1,10 +1,11 @@
 {
-    "name": "benchmark-analyze",
-    "version": "0.1.0",
-    "private": true,
-    "license": "MIT",
-    "scripts": {
-        "dev": "trunk serve --port 3001",
-        "jupyter": "uv run --with jupyter jupyter lab --notebook-dir ./notebooks"
-    }
+  "name": "benchmark-analyze",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "format": "uv run ruff format",
+    "dev": "trunk serve --port 3001",
+    "jupyter": "uv run --with jupyter jupyter lab --notebook-dir ./notebooks"
+  }
 }
