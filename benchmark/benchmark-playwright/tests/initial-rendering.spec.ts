@@ -1,7 +1,7 @@
 import { resolve } from "path";
-import { expect, test } from "@playwright/test"
+import { expect, test } from "@playwright/test";
 import { baseUrl } from "../utils/base-url";
-import { persistWebVital } from "../utils/persist-measure"
+import { persistWebVital } from "../utils/persist-measure";
 
 test.describe("initial rendering phase", () => {
   test("web_vitals", async ({ page }) => {
@@ -14,17 +14,23 @@ test.describe("initial rendering phase", () => {
     });
 
     // Validate articles are loaded and rendered to the DOM
-    await expect(page.getByRole("heading", {
-      name: "Playwright"
-    })).toBeAttached();
+    await expect(
+      page.getByRole("heading", {
+        name: "Playwright",
+      }),
+    ).toBeAttached();
 
     // Click on a link to get Web Vitals like INP
-    await page.getByRole("heading", {
-      name: "Playwright"
-    }).click();
-    await expect(page.getByRole("heading", {
-      name: "Summary of Playwright"
-    })).toBeVisible();
+    await page
+      .getByRole("heading", {
+        name: "Playwright",
+      })
+      .click();
+    await expect(
+      page.getByRole("heading", {
+        name: "Summary of Playwright",
+      }),
+    ).toBeVisible();
 
     // Persist the Web Vitals
     const results = await page.evaluate(() => {

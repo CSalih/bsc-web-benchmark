@@ -3,7 +3,7 @@ import { afterFrame } from "../utils/after-frame";
 import { baseUrl } from "../utils/base-url";
 import { persistMeasure } from "../utils/persist-measure";
 
-test.describe.configure({ mode: 'parallel' });
+test.describe.configure({ mode: "parallel" });
 
 test("create_1000_rows", async ({ page }) => {
   // Add custom script to measure performance
@@ -183,10 +183,34 @@ test("update_every_10th_row", async ({ page }) => {
   });
 
   // check if some 10th row is updated
-  await test.expect(page.locator(".table > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2)")).toContainText("!!!");
-  await test.expect(page.locator(".table > tbody:nth-child(1) > tr:nth-child(11) > td:nth-child(2)")).toContainText("!!!");
-  await test.expect(page.locator(".table > tbody:nth-child(1) > tr:nth-child(981) > td:nth-child(2)")).toContainText("!!!");
-  await test.expect(page.locator(".table > tbody:nth-child(1) > tr:nth-child(991) > td:nth-child(2)")).toContainText("!!!");
+  await test
+    .expect(
+      page.locator(
+        ".table > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2)",
+      ),
+    )
+    .toContainText("!!!");
+  await test
+    .expect(
+      page.locator(
+        ".table > tbody:nth-child(1) > tr:nth-child(11) > td:nth-child(2)",
+      ),
+    )
+    .toContainText("!!!");
+  await test
+    .expect(
+      page.locator(
+        ".table > tbody:nth-child(1) > tr:nth-child(981) > td:nth-child(2)",
+      ),
+    )
+    .toContainText("!!!");
+  await test
+    .expect(
+      page.locator(
+        ".table > tbody:nth-child(1) > tr:nth-child(991) > td:nth-child(2)",
+      ),
+    )
+    .toContainText("!!!");
 
   // Calculate the duration of the action
   const measure = await page.evaluate(() => {
@@ -224,8 +248,20 @@ test("swap_rows", async ({ page }) => {
       state: "attached",
     });
   await test.expect(page.locator(".table > tbody > tr")).toHaveCount(1000);
-  await test.expect(page.locator(".table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1)")).toContainText("2");
-  await test.expect(page.locator(".table > tbody:nth-child(1) > tr:nth-child(999) > td:nth-child(1)")).toContainText("999");
+  await test
+    .expect(
+      page.locator(
+        ".table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1)",
+      ),
+    )
+    .toContainText("2");
+  await test
+    .expect(
+      page.locator(
+        ".table > tbody:nth-child(1) > tr:nth-child(999) > td:nth-child(1)",
+      ),
+    )
+    .toContainText("999");
 
   await page.evaluate(() => {
     performance.mark("swap_rows_start");
@@ -237,8 +273,20 @@ test("swap_rows", async ({ page }) => {
   });
 
   // check if 2nd and 999th rows are swapped
-  await test.expect(page.locator(".table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1)")).toContainText("999");
-  await test.expect(page.locator(".table > tbody:nth-child(1) > tr:nth-child(999) > td:nth-child(1)")).toContainText("2");
+  await test
+    .expect(
+      page.locator(
+        ".table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1)",
+      ),
+    )
+    .toContainText("999");
+  await test
+    .expect(
+      page.locator(
+        ".table > tbody:nth-child(1) > tr:nth-child(999) > td:nth-child(1)",
+      ),
+    )
+    .toContainText("2");
 
   // Calculate the duration of the action
   const measure = await page.evaluate(() => {

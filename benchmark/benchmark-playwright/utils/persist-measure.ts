@@ -7,7 +7,7 @@ type WebVitalMetric = {
   /**
    * The name of the metric (in acronym form).
    */
-  name: 'CLS' | 'FCP' | 'FID' | 'INP' | 'LCP' | 'TTFB';
+  name: "CLS" | "FCP" | "FID" | "INP" | "LCP" | "TTFB";
   /**
    * The current value of the metric.
    */
@@ -16,15 +16,14 @@ type WebVitalMetric = {
    * The rating as to whether the metric value is within the "good",
    * "needs improvement", or "poor" thresholds of the metric.
    */
-  rating: 'good' | 'needs-improvement' | 'poor';
+  rating: "good" | "needs-improvement" | "poor";
   /**
    * Any performance entries relevant to the metric value calculation.
    * The array may also be empty if the metric value was not based on any
    * entries (e.g. a CLS value of 0 given no layout shifts).
    */
   entries: PerformanceEntry[];
-}
-
+};
 
 export const persistWebVital = (page: Page, result: WebVitalMetric[]) => {
   if (!fs.existsSync(outputDir)) {
@@ -43,7 +42,7 @@ export const persistWebVital = (page: Page, result: WebVitalMetric[]) => {
       browser,
       entry.name,
       entry.rating,
-      entry.value
+      entry.value,
     ].join(",");
 
     fs.appendFileSync(filename, `${row}\n`);
