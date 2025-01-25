@@ -161,6 +161,7 @@ pub async fn editor_action(
 }
 
 #[component]
+#[allow(non_snake_case)]
 pub fn Editor() -> impl IntoView {
     let editor_server_action = create_server_action::<EditorAction>();
     let result = editor_server_action.value();
