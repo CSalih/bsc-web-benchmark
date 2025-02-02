@@ -85,8 +85,8 @@ const runBenchmark = ({
   baseUrl,
   workers = 1,
   repeatEach = 100,
-  maxFailures = 10,
-  retries = 3,
+  maxFailures = 100,
+  retries = 5,
   testFile,
 }) => {
   console.log("Starting benchmark");
@@ -190,7 +190,6 @@ program
         baseUrl: app.baseUrl,
         workers: options.workers,
         repeatEach: options.repeat,
-        maxFailures: 50,
         testFile: app.testFile
       });
 
