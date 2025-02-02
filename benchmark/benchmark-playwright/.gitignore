@@ -1,7 +1,10 @@
 node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
 
 test-run/
+test-results/
+test-results-*/
+
+playwright-report/
+playwright/.cache/
+
+blob-report/
