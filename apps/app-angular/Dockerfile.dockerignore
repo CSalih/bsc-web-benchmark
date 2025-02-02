@@ -1,8 +1,8 @@
-**/.angular/
-**/dist/
-**/node_modules/
+.angular/
+dist/
+node_modules/
 
-**/.gitignore
-**/Dockerfile
-**/Dockerfile.*
-**/README.md
+.gitignore
+Dockerfile
+Dockerfile.*
+README.md
