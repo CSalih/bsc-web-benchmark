@@ -23,10 +23,6 @@ const apps = {
     baseUrl: "http://localhost:3003",
     testFile: "tests/responsiveness.spec.ts",
   },
-  "realworld-vue": {
-    baseUrl: "http://localhost:4003",
-    testFile: "tests/initial-rendering.spec.ts",
-  },
 };
 
 
