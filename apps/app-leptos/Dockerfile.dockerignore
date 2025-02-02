@@ -2,5 +2,7 @@ dist/
 target/
 
 .gitignore
+Dockerfile
+Dockerfile.*
 README.md
 package.json
