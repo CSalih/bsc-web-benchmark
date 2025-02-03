@@ -5,7 +5,7 @@ import { Api, ContentType } from "src/services/api";
 export const limit = 10;
 
 export const api = new Api({
-  baseUrl: `${CONFIG.API_HOST}/api`,
+  baseUrl: CONFIG.API_BASE_URL,
   securityWorker: (token) =>
     token ? { headers: { Authorization: `Token ${String(token)}` } } : {},
   baseApiParams: {
