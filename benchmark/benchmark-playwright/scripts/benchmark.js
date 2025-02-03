@@ -23,6 +23,22 @@ const apps = {
     baseUrl: "http://localhost:3003",
     testFile: "tests/responsiveness.spec.ts",
   },
+  "realworld-angular": {
+    baseUrl: "http://localhost:4000",
+    testFile: "tests/initial-rendering.spec.ts",
+  },
+  "realworld-leptos": {
+    baseUrl: "http://localhost:4001",
+    testFile: "tests/initial-rendering.spec.ts",
+  },
+  "realworld-react": {
+    baseUrl: "http://localhost:4002",
+    testFile: "tests/initial-rendering.spec.ts",
+  },
+  "realworld-vue": {
+    baseUrl: "http://localhost:4003",
+    testFile: "tests/initial-rendering.spec.ts",
+  },
 };
 
 
