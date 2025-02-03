@@ -1,4 +1,4 @@
-INSERT INTO public.users (id, email, username, password, bio, image, created_at, updated_at) VALUES ('cbf62339-2584-4d59-9e5f-c83615d50cc7', 'a@a.a', 'a', '$2b$12$Gj2VtnJz4N72NmqtJ6t2uOETfz9k7jCbyjbaWDQffeKFhTtPkVabm', null, null, '2024-12-24 11:47:56.897106', '2024-12-24 11:47:56.897106');
+INSERT INTO public.users (id, email, username, password, bio, image, created_at, updated_at) VALUES ('cbf62339-2584-4d59-9e5f-c83615d50cc7', 'a@a.a', 'a', '$2b$12$Gj2VtnJz4N72NmqtJ6t2uOETfz9k7jCbyjbaWDQffeKFhTtPkVabm', null, 'http://localhost:8080/static/images/smiley-cyrus.jpg', '2024-12-24 11:47:56.897106', '2024-12-24 11:47:56.897106');
 
 INSERT INTO public.articles (id, author_id, slug, title, description, body, created_at, updated_at) VALUES ('65bd9c4b-23eb-4a98-9cba-6ddaf0a20dbe', 'cbf62339-2584-4d59-9e5f-c83615d50cc7', 'angular', 'Angular', 'Angular Webframework', e'### Summary of Angular
 
