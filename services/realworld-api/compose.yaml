@@ -2,7 +2,10 @@ services:
   app:
     container_name: app
     build: .
-    command: 'bash -c "diesel setup && cargo watch --exec run"'
+    command: >
+      bash -c "[ ! -f .env ] && cp .env.example .env || true
+      && diesel setup
+      && cargo watch --exec run"
     volumes:
       - .:/app
     depends_on:

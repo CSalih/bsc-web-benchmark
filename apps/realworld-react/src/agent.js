@@ -1,5 +1,5 @@
 const API_ROOT =
-  import.meta.env.VITE_API_HOST ?? "https://conduit.productionready.io/api";
+  import.meta.env.VITE_API_HOST ?? "http://localhost:8080/api";
 
 /**
  * Serialize object to URL params

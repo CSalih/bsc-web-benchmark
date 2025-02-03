@@ -69,10 +69,7 @@ function LoggedInNavbar() {
         <Link to={`/profile/${currentUser?.username}`} className="nav-link">
           {currentUser?.image && (
             <img
-              src={
-                currentUser.image ||
-                "https://static.productionready.io/images/smiley-cyrus.jpg"
-              }
+              src={currentUser.image}
               className="user-pic"
               alt={currentUser?.username}
             />
