@@ -6,6 +6,8 @@ extern crate log;
 
 use actix_web::middleware::Logger;
 use actix_web::{App, HttpServer};
+use actix_files;
+
 mod app;
 mod constants;
 mod error;
@@ -30,6 +32,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(actix_web::web::Data::new(state.clone()))
             .wrap(app::drivers::middlewares::cors::cors())
             .wrap(app::drivers::middlewares::auth::Authentication)
+            .service(actix_files::Files::new("/static", "./static"))
             .configure(app::drivers::routes::api)
     })
     .bind(constants::BIND)?

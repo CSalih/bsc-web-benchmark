@@ -54,13 +54,7 @@ function ArticlePreview({ article }) {
     <div className="article-preview">
       <div className="article-meta">
         <Link to={`/profile/${article.author.username}`}>
-          <img
-            src={
-              article.author.image ||
-              "https://static.productionready.io/images/smiley-cyrus.jpg"
-            }
-            alt={article.author.username}
-          />
+          <img src={article.author.image} alt={article.author.username} />
         </Link>
 
         <div className="info">

@@ -30,10 +30,7 @@ import {
  * />
  */
 function SettingsForm({ currentUser, onSaveSettings }) {
-  const [image, setImage] = useState(
-    currentUser?.image ??
-      "https://static.productionready.io/images/smiley-cyrus.jpg",
-  );
+  const [image, setImage] = useState(currentUser?.image);
   const [username, setUsername] = useState(currentUser?.username ?? "");
   const [bio, setBio] = useState(currentUser?.bio ?? "");
   const [email, setEmail] = useState(currentUser?.email ?? "");

@@ -51,10 +51,7 @@ function CommentForm() {
         <img
           className="comment-author-img"
           alt={currentUser.username}
-          src={
-            currentUser.image ??
-            "https://static.productionready.io/images/smiley-cyrus.jpg"
-          }
+          src={currentUser.image}
         />
         <button className="btn btn-sm btn-primary" type="submit">
           Post Comment

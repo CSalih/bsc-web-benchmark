@@ -102,10 +102,7 @@ function UserInfo({ profile }) {
         <div className="row">
           <div className="col-xs-12 col-md-10 offset-md-1">
             <img
-              src={
-                profile.image ||
-                "https://static.productionready.io/images/smiley-cyrus.jpg"
-              }
+              src={profile.image}
               className="user-img"
               alt={profile.username}
             />

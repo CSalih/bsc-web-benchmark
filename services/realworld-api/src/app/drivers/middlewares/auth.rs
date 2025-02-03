@@ -200,7 +200,7 @@ mod tests {
     }
 }
 
-const SKIP_AUTH_ROUTES: [SkipAuthRoute; 7] = [
+const SKIP_AUTH_ROUTES: [SkipAuthRoute; 10] = [
     SkipAuthRoute {
         path: "/api/healthcheck",
         method: Method::GET,
@@ -227,6 +227,18 @@ const SKIP_AUTH_ROUTES: [SkipAuthRoute; 7] = [
     },
     SkipAuthRoute {
         path: "/api/articles/{article_title_slug}/comments",
+        method: Method::GET,
+    },
+    SkipAuthRoute {
+        path: "/static/css/{filename}",
+        method: Method::GET,
+    },
+    SkipAuthRoute {
+        path: "/static/fonts/{font}",
+        method: Method::GET,
+    },
+    SkipAuthRoute {
+        path: "/static/images/{font}",
         method: Method::GET,
     },
 ];

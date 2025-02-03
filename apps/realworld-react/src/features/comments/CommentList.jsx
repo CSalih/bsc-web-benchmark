@@ -79,10 +79,7 @@ function Comment({ comment }) {
           <img
             className="comment-author-img"
             alt={comment.author.username}
-            src={
-              comment.author.image ??
-              "https://static.productionready.io/images/smiley-cyrus.jpg"
-            }
+            src={comment.author.image}
           />
         </Link>
         &nbsp;
