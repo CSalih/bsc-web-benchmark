@@ -66,6 +66,12 @@ pub fn App() -> impl IntoView {
                         path=path!("/settings")
                         view=move || view! { <SettingsPage update_user=set_user logout /> }
                     />
+                    <ProtectedRoute
+                        condition=move || user.get().map(|_| Some(true)).unwrap_or_default()
+                        redirect_path=|| "/login"
+                        path=path!("/profile/:username")
+                        view=move || view! { <ProfilePage /> }
+                    />
                 </FlatRoutes>
             </main>
             <footer>

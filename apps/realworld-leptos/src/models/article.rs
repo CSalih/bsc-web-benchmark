@@ -57,6 +57,25 @@ impl Article {
             .unwrap()
     }
 
+
+    pub async fn load_my_feed(token: String, pagination: Pagination) -> ArticlesResponse {
+        let url = "http://localhost:8080/api/articles/feed";
+
+        reqwest::Client::new()
+            .get(url)
+            .query(&[
+                ("limit", pagination.get_amount().to_string()),
+                ("offset", ((pagination.get_page() - 1) * pagination.get_amount()).to_string()
+             )])
+            .header("Authorization", format!("Token {}", token))
+            .send()
+            .await
+            .unwrap()
+            .json::<ArticlesResponse>()
+            .await
+            .unwrap()
+    }
+
     pub async fn load_article(slug: String) -> ArticleResponse {
         let url = format!("http://localhost:8080/api/articles/{slug}");
 
