@@ -30,7 +30,7 @@ pub fn SettingsPage(logout: LogoutAction, update_user: WriteSignal<Option<User>>
     let auth_context = expect_context::<auth::AuthContext>();
 
     let Some(user) = auth_context.user.get() else {
-        panic!("ss");
+        panic!("Not authenticated"); // TODO: redirect to login page
     };
 
     let (error_messages, set_error_messages) = signal(Vec::<String>::new());
