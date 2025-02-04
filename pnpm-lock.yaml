@@ -387,8 +387,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/prettier-config
       '@playwright/test':
-        specifier: ^1.45.2
-        version: 1.45.2
+        specifier: ^1.50.1
+        version: 1.50.1
       '@types/node':
         specifier: 20.12.7
         version: 20.12.7
@@ -2739,8 +2739,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@playwright/test@1.45.2':
-    resolution: {integrity: sha512-JxG9eq92ET75EbVi3s+4sYbcG7q72ECeZNbdBlaMkGcNbiDQ4cAi8U2QP5oKkOx+1gpaiL1LDStmzCaEM1Z6fQ==}
+  '@playwright/test@1.50.1':
+    resolution: {integrity: sha512-Jii3aBg+CEDpgnuDxEp/h7BimHcUTDlpEtce89xEumlJ5ef2hqepZ+PWp1DDpYC/VO9fmWVI1IlEaoI5fK9FXQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -6853,13 +6853,13 @@ packages:
     resolution: {integrity: sha512-Ie9z/WINcxxLp27BKOCHGde4ITq9UklYKDzVo1nhk5sqGEXU3FpkwP5GM2voTGJkGd9B3Otl+Q4uwSOeSUtOBA==}
     engines: {node: '>=14.16'}
 
-  playwright-core@1.45.2:
-    resolution: {integrity: sha512-ha175tAWb0dTK0X4orvBIqi3jGEt701SMxMhyujxNrgd8K0Uy5wMSwwcQHtyB4om7INUkfndx02XnQ2p6dvLDw==}
+  playwright-core@1.50.1:
+    resolution: {integrity: sha512-ra9fsNWayuYumt+NiM069M6OkcRb1FZSK8bgi66AtpFoWkg2+y0bJSNmkFrWhMbEBbVKC/EruAHH3g0zmtwGmQ==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.45.2:
-    resolution: {integrity: sha512-ReywF2t/0teRvNBpfIgh5e4wnrI/8Su8ssdo5XsQKpjxJj+jspm00jSoz9BTg91TT0c9HRjXO7LBNVrgYj9X0g==}
+  playwright@1.50.1:
+    resolution: {integrity: sha512-G8rwsOQJ63XG6BbKj2w5rHeavFjy5zynBA9zsJMMtBoe/Uf757oG12NXz6e6OirF7RCrTVAKFXbLmn1RbL7Qaw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -9021,7 +9021,7 @@ snapshots:
       '@babel/helper-split-export-declaration': 7.24.7
       '@babel/plugin-syntax-import-attributes': 7.26.0(@babel/core@7.26.0)
       '@inquirer/confirm': 5.1.1(@types/node@18.19.21)
-      '@vitejs/plugin-basic-ssl': 1.2.0(vite@6.0.7(@types/node@18.19.21)(jiti@1.21.7)(less@4.2.1)(sass@1.83.1)(stylus@0.64.0)(terser@5.37.0)(yaml@2.7.0))
+      '@vitejs/plugin-basic-ssl': 1.2.0(vite@6.0.7(@types/node@18.19.21)(jiti@1.21.7)(less@4.1.3)(sass@1.83.4)(stylus@0.64.0)(terser@5.37.0)(yaml@2.7.0))
       beasties: 0.2.0
       browserslist: 4.24.4
       esbuild: 0.24.2
@@ -12020,9 +12020,9 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@playwright/test@1.45.2':
+  '@playwright/test@1.50.1':
     dependencies:
-      playwright: 1.45.2
+      playwright: 1.50.1
 
   '@reduxjs/toolkit@2.5.0(react-redux@9.2.0(@types/react@19.0.2)(react@19.0.0)(redux@5.0.1))(react@19.0.0)':
     dependencies:
@@ -12738,10 +12738,6 @@ snapshots:
   '@vitejs/plugin-basic-ssl@1.2.0(vite@6.0.7(@types/node@18.19.21)(jiti@1.21.7)(less@4.1.3)(sass@1.83.4)(stylus@0.64.0)(terser@5.37.0)(yaml@2.7.0))':
     dependencies:
       vite: 6.0.7(@types/node@18.19.21)(jiti@1.21.7)(less@4.1.3)(sass@1.83.4)(stylus@0.64.0)(terser@5.37.0)(yaml@2.7.0)
-
-  '@vitejs/plugin-basic-ssl@1.2.0(vite@6.0.7(@types/node@18.19.21)(jiti@1.21.7)(less@4.2.1)(sass@1.83.1)(stylus@0.64.0)(terser@5.37.0)(yaml@2.7.0))':
-    dependencies:
-      vite: 6.0.7(@types/node@18.19.21)(jiti@1.21.7)(less@4.2.1)(sass@1.83.1)(stylus@0.64.0)(terser@5.37.0)(yaml@2.7.0)
 
   '@vitejs/plugin-basic-ssl@1.2.0(vite@6.0.7(@types/node@22.10.2)(jiti@1.21.7)(less@4.2.1)(sass@1.83.1)(stylus@0.64.0)(terser@5.37.0)(yaml@2.7.0))':
     dependencies:
@@ -16827,11 +16823,11 @@ snapshots:
     dependencies:
       find-up: 6.3.0
 
-  playwright-core@1.45.2: {}
+  playwright-core@1.50.1: {}
 
-  playwright@1.45.2:
+  playwright@1.50.1:
     dependencies:
-      playwright-core: 1.45.2
+      playwright-core: 1.50.1
     optionalDependencies:
       fsevents: 2.3.2
 
