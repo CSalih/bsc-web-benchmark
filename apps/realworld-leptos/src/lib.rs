@@ -72,6 +72,12 @@ pub fn App() -> impl IntoView {
                         path=path!("/profile/:username")
                         view=move || view! { <ProfilePage /> }
                     />
+                    <ProtectedRoute
+                        condition=move || user.get().map(|_| Some(true)).unwrap_or_default()
+                        redirect_path=|| "/login"
+                        path=path!("/editor")
+                        view=move || view! { <EditorPage /> }
+                    />
                 </FlatRoutes>
             </main>
             <footer>
