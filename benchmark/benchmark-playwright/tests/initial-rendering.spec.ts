@@ -9,9 +9,7 @@ test.describe("initial rendering phase", () => {
       path: resolve(__dirname, "../utils/web-vitals.js"),
     });
 
-    await page.goto(baseUrl("/"), {
-      waitUntil: "networkidle",
-    });
+    await page.goto(baseUrl("/"));
 
     // Validate articles are loaded and rendered to the DOM
     await expect(
