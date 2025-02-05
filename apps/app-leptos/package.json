@@ -1,12 +1,12 @@
 {
-  "name": "app-leptos",
+  "name": "@csalih/app-leptos",
   "version": "0.1.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "format": "leptosfmt .",
     "dev": "trunk serve --port 3001",
     "build": "trunk build --release",
-    "build:docker": "docker build -t bsc/app-leptos:latest . --file Dockerfile"
+    "build:docker": "docker build -t csalih/app-leptos:latest . --file Dockerfile"
   }
 }

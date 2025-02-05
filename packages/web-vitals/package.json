@@ -1,20 +1,20 @@
 {
-  "name": "web-vitals",
+  "name": "@csalih/web-vitals",
   "version": "0.1.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
     "build": "vite build",
     "format": "prettier --write \"lib/**/*.{js,ts}\""
   },
-  "prettier": "@bsc-web-benchmark/prettier-config",
+  "prettier": "@csalih/prettier-config",
   "dependencies": {
     "web-vitals": "^4.2.4"
   },
   "devDependencies": {
-    "@bsc-web-benchmark/prettier-config": "workspace:*",
-    "vite": "5.2.10"
+    "@csalih/prettier-config": "workspace:*",
+    "vite": "^6.0.7"
   }
 }

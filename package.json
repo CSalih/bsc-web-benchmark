@@ -1,16 +1,15 @@
 {
-  "name": "bsc-web-benchmark",
+  "name": "@csalih/bsc-web-benchmark",
   "version": "0.1.0",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "engines": {
     "node": "^20",
-    "pnpm": ">=9"
+    "pnpm": "^9"
   },
   "scripts": {
     "format": "pnpm --stream --parallel format",
     "build": "pnpm --stream --parallel --filter \"...{apps/**}\" build",
-    "build:docker": "pnpm --stream --parallel build:docker",
-    "bech:build-size": "node scripts/measure-build-size.js"
+    "build:docker": "pnpm --stream --parallel build:docker"
   },
   "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }

@@ -1,20 +1,20 @@
 {
-  "name": "benchmark-playwright",
+  "name": "@csalih/benchmark-playwright",
   "version": "0.1.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "dev": "playwright test --ui --ui-port 8001",
     "bench": "node scripts/benchmark.js",
     "bench:pw": "playwright test --repeat-each 100 --workers 1",
-    "format": "prettier --write \"{tests,utils}/**/*.{js,ts,json}\""
+    "format": "prettier --write \"{tests,utils,scripts}/**/*.{js,ts,json}\""
   },
   "bin": {
-    "bechmark": "./scripts/benchmark.js"
+    "benchmark": "./scripts/benchmark.js"
   },
-  "prettier": "@bsc-web-benchmark/prettier-config",
+  "prettier": "@csalih/prettier-config",
   "devDependencies": {
-    "@bsc-web-benchmark/prettier-config": "workspace:*",
+    "@csalih/prettier-config": "workspace:*",
     "@playwright/test": "^1.50.1",
     "@types/node": "20.12.7"
   },

@@ -1,16 +1,16 @@
 {
-  "name": "realworld-vue",
+  "name": "@csalih/realworld-vue",
   "version": "0.1.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite --port 4003",
     "build": "vue-tsc --build --force && vite build",
-    "build:docker": "docker build -t bsc/realworld-vue:latest ../.. --file Dockerfile",
+    "build:docker": "docker build -t csalih/realworld-vue:latest ../.. --file Dockerfile",
     "format": "prettier --write \"src/**/*.{vue,js,ts}\""
   },
-  "prettier": "@bsc-web-benchmark/prettier-config",
+  "prettier": "@csalih/prettier-config",
   "dependencies": {
     "marked": "^15.0.5",
     "pinia": "^2.3.0",
@@ -18,7 +18,7 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@bsc-web-benchmark/prettier-config": "workspace:*",
+    "@csalih/prettier-config": "workspace:*",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.12.7",
     "@vitejs/plugin-vue": "^5.2.1",

@@ -1,5 +1,5 @@
 {
-  "name": "realworld-angular",
+  "name": "@csalih/realworld-angular",
   "version": "19.0.2",
   "license": "MIT",
   "scripts": {
@@ -26,7 +26,7 @@
     "dep-graph": "nx dep-graph",
     "help": "nx help",
     "workspace-generator": "nx workspace-generator",
-    "build:docker": "docker build -t bsc/realworld-angular:latest ../.. --file Dockerfile"
+    "build:docker": "docker build -t csalih/realworld-angular:latest ../.. --file Dockerfile"
   },
   "private": true,
   "dependencies": {
