@@ -1,5 +1,4 @@
-const API_ROOT =
-  import.meta.env.VITE_API_URL ?? "http://localhost:8080/api";
+const API_ROOT = import.meta.env.VITE_API_URL ?? "http://localhost:8080/api";
 
 /**
  * Serialize object to URL params

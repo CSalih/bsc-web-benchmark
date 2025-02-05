@@ -1,0 +1,11 @@
+{
+  "name": "@csalih/realworld-api",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "format": "cargo fmt",
+    "dev": "cargo watch --exec run",
+    "build:docker": "docker build -t csalih/realworld-api:latest . --file Dockerfile"
+  }
+}

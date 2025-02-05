@@ -4,9 +4,9 @@ extern crate diesel;
 #[macro_use]
 extern crate log;
 
+use actix_files;
 use actix_web::middleware::Logger;
 use actix_web::{App, HttpServer};
-use actix_files;
 
 mod app;
 mod constants;

@@ -5,11 +5,11 @@ use crate::error::AppError;
 use crate::utils::token;
 use actix_web::HttpMessage;
 use actix_web::{
-  body::EitherBody,
-  dev::{Service, ServiceRequest, ServiceResponse, Transform},
-  http::Method,
-  web::Data,
-  Error, HttpRequest, HttpResponse,
+    body::EitherBody,
+    dev::{Service, ServiceRequest, ServiceResponse, Transform},
+    http::Method,
+    web::Data,
+    Error, HttpRequest, HttpResponse,
 };
 use futures::future::{ok, Ready};
 use futures::Future;

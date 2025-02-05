@@ -41,7 +41,6 @@ const apps = {
   },
 };
 
-
 const dumpSystemInfo = (outputDir) => {
   const os = require("os");
 
@@ -144,7 +143,7 @@ const startWebServer = (app, baseUrl) => {
       `${url.port}:80`,
       "--name",
       name,
-      `bsc/${app}:latest`,
+      `csalih/${app}:latest`,
     ],
     {
       stdio: "ignore",
@@ -181,7 +180,9 @@ program
     isDefault: true,
   })
   .description("Run the benchmark")
-  .addOption(new Option("-a, --app [app...]").default("all").choices(Object.keys(apps)))
+  .addOption(
+    new Option("-a, --app [app...]").default("all").choices(Object.keys(apps)),
+  )
   .addOption(new Option("-n, --repeat [repeat]").default(100))
   .addOption(new Option("-j, --workers [workers]").default(1))
   .action((options) => {
@@ -202,13 +203,16 @@ program
         baseUrl: app.baseUrl,
         workers: options.workers,
         repeatEach: options.repeat,
-        testFile: app.testFile
+        testFile: app.testFile,
       });
 
       // backup results
       console.log(`Backing up results for ${appName}`);
       const os = require("os");
-      const backupDir = path.join(__dirname, `../test-run/${appName}_${os.platform()}_${testDate}`);
+      const backupDir = path.join(
+        __dirname,
+        `../test-run/${appName}_${os.platform()}_${testDate}`,
+      );
       if (!fs.existsSync(backupDir)) {
         fs.mkdirSync(backupDir, {
           recursive: true,
