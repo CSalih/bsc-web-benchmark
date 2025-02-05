@@ -5,11 +5,11 @@ use crate::error::AppError;
 use crate::utils::token;
 use actix_web::HttpMessage;
 use actix_web::{
-    body::EitherBody,
-    dev::{Service, ServiceRequest, ServiceResponse, Transform},
-    http::Method,
-    web::Data,
-    Error, HttpRequest, HttpResponse,
+  body::EitherBody,
+  dev::{Service, ServiceRequest, ServiceResponse, Transform},
+  http::Method,
+  web::Data,
+  Error, HttpRequest, HttpResponse,
 };
 use futures::future::{ok, Ready};
 use futures::Future;
@@ -60,37 +60,23 @@ where
     actix_web::dev::forward_ready!(service);
 
     fn call(&self, mut req: ServiceRequest) -> Self::Future {
-        let is_verified = if should_skip_auth(&req) {
-            true
-        } else {
-            set_auth_user(&mut req)
-        };
-        if is_verified {
-            let fut = self.service.call(req);
-            Box::pin(async move {
-                let res = fut.await?.map_into_left_body();
-                Ok(res)
-            })
-        } else {
-            Box::pin(async move {
+        let user_id = get_user_id_from_header(&req);
+
+        if user_id.is_ok() && !set_auth_user(&mut req) {
+            return Box::pin(async move {
                 let (req, _res) = req.into_parts();
                 let res = HttpResponse::Unauthorized().finish().map_into_right_body();
                 let srv = ServiceResponse::new(req, res);
                 Ok(srv)
-            })
-        }
-    }
-}
+            });
+        };
 
-fn should_skip_auth(req: &ServiceRequest) -> bool {
-    let method = req.method();
-    if Method::OPTIONS == *method {
-        return true;
+        let fut = self.service.call(req);
+        Box::pin(async move {
+            let res = fut.await?.map_into_left_body();
+            Ok(res)
+        })
     }
-
-    SKIP_AUTH_ROUTES
-        .iter()
-        .any(|route| route.matches_path_and_method(req.path(), req.method()))
 }
 
 const TOKEN_IDENTIFIER: &str = "Token";
@@ -140,105 +126,3 @@ pub fn get_current_user(req: &HttpRequest) -> Result<User, AppError> {
             AppError::Unauthorized(json!({"error": "Unauthrized user. Need auth token on header."}))
         })
 }
-
-struct SkipAuthRoute {
-    path: &'static str,
-    method: Method,
-}
-
-impl SkipAuthRoute {
-    fn matches_path_and_method(&self, path: &str, method: &Method) -> bool {
-        self.matches_path(path) && self.matches_method(method)
-    }
-
-    fn matches_path(&self, path: &str) -> bool {
-        let expect_path = self.path.split('/').collect::<Vec<_>>();
-        let this_path = path.split('/').collect::<Vec<_>>();
-        if expect_path.len() != this_path.len() {
-            return false;
-        };
-        let path_set = expect_path.iter().zip(this_path.iter());
-        for (expect_path, this_path) in path_set {
-            if SkipAuthRoute::is_slug_path(expect_path) {
-                continue;
-            }
-            if expect_path != this_path {
-                return false;
-            }
-        }
-        true
-    }
-
-    fn matches_method(&self, method: &Method) -> bool {
-        self.method == method
-    }
-
-    fn is_slug_path(text: &str) -> bool {
-        let first = text.chars().next().unwrap_or(' ');
-        let last = text.chars().last().unwrap_or(' ');
-        first == '{' && last == '}'
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use actix_web::http::Method;
-    #[test]
-    fn is_match_path_and_method_test() {
-        let route = SkipAuthRoute {
-            path: "/api/healthcheck",
-            method: Method::GET,
-        };
-        assert!(route.matches_path_and_method("/api/healthcheck", &Method::GET));
-
-        let route = SkipAuthRoute {
-            path: "/api/{this-is-slug}/healthcheck",
-            method: Method::POST,
-        };
-        assert!(route.matches_path_and_method("/api/1234/healthcheck", &Method::POST));
-    }
-}
-
-const SKIP_AUTH_ROUTES: [SkipAuthRoute; 10] = [
-    SkipAuthRoute {
-        path: "/api/healthcheck",
-        method: Method::GET,
-    },
-    SkipAuthRoute {
-        path: "/api/tags",
-        method: Method::GET,
-    },
-    SkipAuthRoute {
-        path: "/api/users",
-        method: Method::POST,
-    },
-    SkipAuthRoute {
-        path: "/api/users/login",
-        method: Method::POST,
-    },
-    SkipAuthRoute {
-        path: "/api/articles",
-        method: Method::GET,
-    },
-    SkipAuthRoute {
-        path: "/api/articles/{article_title_slug}",
-        method: Method::GET,
-    },
-    SkipAuthRoute {
-        path: "/api/articles/{article_title_slug}/comments",
-        method: Method::GET,
-    },
-    SkipAuthRoute {
-        path: "/static/css/{filename}",
-        method: Method::GET,
-    },
-    SkipAuthRoute {
-        path: "/static/fonts/{font}",
-        method: Method::GET,
-    },
-    SkipAuthRoute {
-        path: "/static/images/{font}",
-        method: Method::GET,
-    },
-];
