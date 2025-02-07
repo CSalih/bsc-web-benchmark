@@ -29,6 +29,6 @@
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.7.2",
-    "vite": "^6.0.7"
+    "vite": "^6.0.9"
   }
 }
