@@ -20,5 +20,5 @@ pnpm --filter=benchmark-playwright exec playwright install
 
 ```bash
 cd benchmark/benchmark-playwright/
-bash scripts/benchmark.js
+node scripts/benchmark.js
 ```
