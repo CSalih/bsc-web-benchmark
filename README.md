@@ -47,3 +47,19 @@ Example to benchmark Leptos with 100 iterations:
 pnpm start:api
 pnpm run benchmark --app realworld-leptos --repeat 100
 ```
+
+# Research Paper and Citation
+
+If you use this software for your research, please cite it as:
+
+```
+@masterthesis{candirBenchmarkComparisonLeptos2025,
+  type = {Bachelor's Thesis},
+  title = {Benchmark Comparison of {{Leptos}} to {{Leading JavaScript Web Frameworks}}},
+  author = {Candir, Salih},
+  year = {2025},
+  month = mar,
+  langid = {english},
+  school = {University of Innsbruck}
+}
+```
