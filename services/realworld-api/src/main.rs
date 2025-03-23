@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate diesel;
-
 #[macro_use]
 extern crate log;
 
@@ -17,7 +16,6 @@ mod utils;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("start conduit server...");
-    std::env::set_var("RUST_LOG", "actix_web=trace");
     env_logger::init();
 
     let state = {

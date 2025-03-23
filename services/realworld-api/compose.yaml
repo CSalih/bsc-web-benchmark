@@ -1,11 +1,8 @@
 services:
   app:
-    container_name: app
+    container_name: realworld-api
+    image: csalih/realworld-api:latest
     build: .
-    command: >
-      bash -c "[ ! -f .env ] && cp .env.example .env || true
-      && diesel setup
-      && cargo watch --exec run"
     volumes:
       - .:/app
     depends_on:
@@ -19,7 +16,7 @@ services:
     container_name: db
     image: "postgres:14.0-alpine"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
     ports:
       - "5432:5432"
     environment:

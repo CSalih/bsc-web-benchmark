@@ -1,8 +1,6 @@
-FROM rust:1.83-slim
+FROM rust:1.83-slim AS build
 
 WORKDIR /app
-
-COPY . .
 
 # Upgrade the system and install dependencies for PostgreSQL
 RUN apt-get update && \
@@ -11,8 +9,18 @@ RUN apt-get update && \
   curl unzip build-essential pkg-config libssl-dev \
   postgresql-client libpq-dev
 
-# Install cargo-watch
-RUN cargo install cargo-watch
-
 # Install diesel_cli for PostgreSQL
 RUN cargo install diesel_cli --no-default-features --features "postgres"
+
+COPY . .
+
+RUN cargo build --release
+
+COPY .env.example .env
+
+EXPOSE 8080
+
+RUN ls -la
+
+# Set the startup command
+CMD ["bash", "-c", "diesel migration run && /app/target/release/conduit"]
