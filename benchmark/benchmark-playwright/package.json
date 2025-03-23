@@ -5,8 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "playwright test --ui --ui-port 8001",
-    "bench": "node scripts/benchmark.js",
-    "bench:pw": "playwright test --repeat-each 100 --workers 1",
+    "benchmark": "node scripts/benchmark.js",
     "format": "prettier --write \"{tests,utils,scripts}/**/*.{js,ts,json}\""
   },
   "bin": {

@@ -6,6 +6,8 @@
   "scripts": {
     "format": "cargo fmt",
     "dev": "cargo watch --exec run",
+    "start": "docker compose up -d",
+    "stop": "docker compose stop",
     "build:docker": "docker build -t csalih/realworld-api:latest . --file Dockerfile"
   }
 }
