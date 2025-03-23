@@ -1,9 +1,9 @@
 # Web Framework Benchmark
 
-This repository contains the source code of the bachelor's thesis 
+This repository contains the source code of the bachelor's thesis
 *Benchmark comparison of Leptos to Leading JavaScript Web Frameworks*.
 
-The `apps` folder contains the source code of the used web frameworks, 
+The `apps` folder contains the source code of the used web frameworks,
 while the `benchmark` folder contains the benchmark related code.
 The `services` folder contains the source code of the RealWorld API server.
 
@@ -56,4 +56,20 @@ Example to benchmark Leptos with 100 iterations:
 ```bash
 pnpm start:api
 pnpm run benchmark --app realworld-leptos --repeat 100
+```
+
+# Research Paper and Citation
+
+If you use this software for your research, please cite it as:
+
+```
+@masterthesis{candirBenchmarkComparisonLeptos2025,
+  type = {Bachelor's Thesis},
+  title = {Benchmark {{Comparison}} of {{Leptos}} to {{Leading JavaScript Web Frameworks}}},
+  author = {Candir, Salih and Benedikt, Dornauer},
+  year = {2025},
+  month = mar,
+  langid = {english},
+  school = {University of Innsbruck}
+}
 ```
