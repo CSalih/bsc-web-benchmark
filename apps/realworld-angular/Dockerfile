@@ -5,6 +5,8 @@ ENV PATH="$PNPM_HOME:$PATH"
 
 WORKDIR /app
 
+# Install latest corepack to avoid "Cannot find matching keyid" error (https://vercel.com/guides/corepack-errors-github-actions#quick-debug-steps)
+RUN npm install -g corepack@latest
 RUN corepack enable
 
 COPY package.json .
