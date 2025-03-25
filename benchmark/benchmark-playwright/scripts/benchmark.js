@@ -146,13 +146,15 @@ const startWebServer = (app, baseUrl) => {
       `csalih/${app}:latest`,
     ],
     {
-      stdio: "ignore",
+      stdio: ['ignore', 'ignore', 'pipe'],
     },
   );
 
   if (cmd.status !== 0) {
     console.error(`Failed to start ${app} server! Exiting...`);
-    console.error(cmd.stderr.toString());
+    console.error("#################");
+    console.error(cmd.stderr?.toString() ?? "Unknown error! See docker logs for more information.");
+    console.error("#################");
     process.exit(1);
   }
   return name;
