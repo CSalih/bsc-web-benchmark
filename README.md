@@ -1,11 +1,21 @@
-# Web Benchmark
+# Web Framework Benchmark
 
-Benchmark comparison of Leptos to Leading JavaScript Web Frameworks
+This repository contains the source code of the bachelor's thesis 
+*Benchmark comparison of Leptos to Leading JavaScript Web Frameworks*.
+
+The `apps` folder contains the source code of the used web frameworks, 
+while the `benchmark` folder contains the benchmark related code.
+The `services` folder contains the source code of the RealWorld API server.
+
+> *NOTE:*
+> In the thesis, the term RealWorld is referred to as Conduit. The code was
+> not adapted to reflect this change yet.
 
 # Requirements
 
-- Node v20
-- Docker v23 or later
+- [Node](https://nodejs.org/en/download) v20
+- [Docker](https://docs.docker.com/engine/install/) v23 or later
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) v0.5 or later
 
 # Setup
 
