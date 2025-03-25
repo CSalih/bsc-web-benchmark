@@ -133,6 +133,15 @@ const startWebServer = (app, baseUrl) => {
   const name = `benchmark-${app}`;
   const url = new URL(baseUrl);
 
+  const isRunningCommand = spawnSync("docker", ["container", "inspect", "--format", "{{.State.Running}}", name], {
+    stdio: "ignore",
+  });
+  const isRunning = isRunningCommand.status === 0;
+  if (isRunning) {
+    console.log(`${app} server is already running. Stopping...`);
+    stopWebServer(name);
+  }
+
   console.log(`Starting ${app} server on port ${url.port} ...`);
   const cmd = spawnSync(
     "docker",
