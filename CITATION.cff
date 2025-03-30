@@ -7,7 +7,7 @@ authors:
 - family-names: "Dornauer"
   given-names: "Benedikt"
   orcid: "https://orcid.org/0000-0002-7713-4686"
-title: "Benchmark Comparison of Leptos to Leading JavaScript Web Frameworks"
+title: Replication package for: "Benchmark Comparison of Leptos to Leading JavaScript Web Frameworks"
 version: 1.0.0
 date-released: 2025-03-31
 url: "https://github.com/CSalih/bsc-web-benchmark"
