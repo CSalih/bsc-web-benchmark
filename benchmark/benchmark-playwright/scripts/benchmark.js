@@ -101,8 +101,9 @@ const runBenchmark = ({
   testFile,
 }) => {
   console.log("Starting benchmark");
+  const isWin = process.platform === "win32";
   const benchmarkResult = spawnSync(
-    "npx",
+    isWin ? "npx.cmd" : "npx",
     [
       "playwright",
       "test",
@@ -113,6 +114,7 @@ const runBenchmark = ({
       testFile,
     ],
     {
+      shell: isWin ? true : undefined,
       stdio: "inherit",
       env: {
         ...process.env,
@@ -133,9 +135,13 @@ const startWebServer = (app, baseUrl) => {
   const name = `benchmark-${app}`;
   const url = new URL(baseUrl);
 
-  const isRunningCommand = spawnSync("docker", ["container", "inspect", "--format", "{{.State.Running}}", name], {
-    stdio: "ignore",
-  });
+  const isRunningCommand = spawnSync(
+    "docker",
+    ["container", "inspect", "--format", "{{.State.Running}}", name],
+    {
+      stdio: "ignore",
+    },
+  );
   const isRunning = isRunningCommand.status === 0;
   if (isRunning) {
     console.log(`${app} server is already running. Stopping...`);
@@ -155,14 +161,17 @@ const startWebServer = (app, baseUrl) => {
       `csalih/${app}:latest`,
     ],
     {
-      stdio: ['ignore', 'ignore', 'pipe'],
+      stdio: ["ignore", "ignore", "pipe"],
     },
   );
 
   if (cmd.status !== 0) {
     console.error(`Failed to start ${app} server! Exiting...`);
     console.error("#################");
-    console.error(cmd.stderr?.toString() ?? "Unknown error! See docker logs for more information.");
+    console.error(
+      cmd.stderr?.toString() ??
+        "Unknown error! See docker logs for more information.",
+    );
     console.error("#################");
     process.exit(1);
   }
